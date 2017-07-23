@@ -9,7 +9,7 @@
 
 <!--
 
-An element that implements a FileThis workflow as a wizard UI. As the user progresses, a new page slides into view in the fixed-size area.
+A drop-in HTML 5 element that quickly, securely, and flexibly integrates your application with the FileThis API.
 
 @demo
  -->
@@ -19,11 +19,20 @@ An element that implements a FileThis workflow as a wizard UI. As the user progr
 
         <style include="iron-flex iron-flex-alignment iron-positioning"></style>
 
+        <style>
+            :host {
+                display:block;
+            }
+        </style>
+
         <div
                 class="layout vertical center center-justified"
                 style="width:100%; height:100%; ">
 
-            <ft-connect-wizard></ft-connect-wizard>
+            <ft-connect-wizard
+                    id="component"
+                    demo="true">
+            </ft-connect-wizard>
         </div>
 
     </template>
@@ -34,8 +43,9 @@ An element that implements a FileThis workflow as a wizard UI. As the user progr
         ({
             is: 'demo-fixture',
 
-            properties:
+            ready: function()
             {
+                this.$.component.getAllData();
             }
 
         });
