@@ -1,0 +1,46 @@
+<!-- ft-connect-wizard element demo -->
+
+<!-- Imports -->
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="../ft-connect-wizard.html">
+
+
+<!--
+
+An element that implements a FileThis workflow as a wizard UI. As the user progresses, a new page slides into view in the fixed-size area.
+
+@demo
+ -->
+<dom-module id="demo-fixture">
+
+    <template>
+
+        <style include="iron-flex iron-flex-alignment iron-positioning"></style>
+
+        <div
+                class="layout vertical center center-justified"
+                style="width:100%; height:100%; ">
+
+            <ft-connect-wizard></ft-connect-wizard>
+        </div>
+
+    </template>
+
+    <script>
+
+        Polymer
+        ({
+            is: 'demo-fixture',
+
+            properties:
+            {
+            }
+
+        });
+
+    </script>
+
+</dom-module>
+

@@ -1,0 +1,19 @@
+{
+    "name": "ft-connect-wizard",
+    "description": "An element that implements a FileThis workflow as a wizard UI. As the user progresses, a new page slides into view in the fixed-size area.",
+    "main": "ft-connect-wizard.html",
+    "dependencies": {
+        "polymer": "Polymer/polymer#1.9 - 2"
+    },
+    "devDependencies": {
+        "iron-component-page": "PolymerElements/iron-component-page#1 - 2",
+        "iron-demo-helpers": "PolymerElements/iron-demo-helpers#1 - 2",
+        "iron-test-helpers": "PolymerElements/iron-test-helpers#1 - 2",
+        "web-component-tester": "Polymer/web-component-tester#^6.0.0",
+        "webcomponentsjs": "webcomponents/webcomponentsjs#^1.0.0"
+    },
+    "resolutions": {
+        "polymer": "1.9 - 2",
+      "webcomponentsjs": "^1.0.0"
+    }
+}
