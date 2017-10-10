@@ -26,8 +26,7 @@ limitations under the License.
 <link rel="import" href="../iron-pages/iron-pages.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
-<link rel="import" href="../paper-tabs/paper-tabs.html">
-<link rel="import" href="../paper-tabs/paper-tab.html">
+<link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../polymer/polymer.html">
 
 <!--
@@ -46,6 +45,8 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
         <style>
             :host {
                 display:block;
+                border:1px solid #DDD;
+                @apply --layout-vertical;
                 @apply --ft-connect-wizard;
             }
         </style>
@@ -73,71 +74,73 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             data="{{_routeData}}">
         </app-route>
 
-        <div
-                class="layout vertical start"
-                style="width:100%; height:100%; border:1px solid #DDD; ">
+        <!-- Header -->
+        <div class="layout horizontal start">
+            {{_selectedPanelName}}
+        </div>
 
-            <!-- Panel Tabs -->
-            <paper-tabs
-                    id="panelTabs"
-                    attr-for-selected="name"
-                    selected="{{_selectedPanelName}}"
-                    style="font-size:16pt; ">
-                <paper-tab name="sources"><a href="#/sources" tabindex="-1">Sites</a></paper-tab>
-                <paper-tab name="connections"><a href="#/connections" tabindex="-1">Connections</a></paper-tab>
-                <paper-tab name="documents"><a href="#/documents" tabindex="-1">Documents</a></paper-tab>
-            </paper-tabs>
+        <!-- Panels -->
+        <iron-pages
+                id="panels"
+                class="flex"
+                style="border-top:1px solid #DDD; "
+                attr-for-selected="name"
+                selected="{{_selectedPanelName}}">
 
-            <!-- Panels -->
-            <!-- Have to wrap with a div, or the iron-pages will steal all of the height from the paper-tabs above. Bug? -->
-            <div
-                    class="layout horizontal center"
-                    style="width:100%; height:100%; border-top:1px solid #DDD; ">
+            <!-- Source panel -->
+            <ft-source-panel
+                    id="sourcesPanel"
+                    name="sources"
+                    style="width:100%; height:100%; "
+                    show-title="false"
+                    selected-filter-id="{{selectedFilterId}}"
+                    sources="[[sources]]">
+            </ft-source-panel>
 
-                <iron-pages
-                        id="panels"
-                        style="width:100%; height:100%; "
-                        attr-for-selected="name"
-                        selected="{{_selectedPanelName}}">
+            <!-- Connection panel -->
+            <ft-connection-panel
+                    id="connectionsPanel"
+                    name="connections"
+                    style="width:100%; height:100%; "
+                    show-title="false"
+                    connections="[[connections]]"
+                    sources="[[sources]]">
+            </ft-connection-panel>
 
-                    <!-- Source panel -->
-                    <ft-source-panel
-                            id="sourcesPanel"
-                            name="sources"
-                            style="width:100%; height:100%; "
-                            show-title="false"
-                            selected-filter-id="{{selectedFilterId}}"
-                            sources="[[sources]]">
-                    </ft-source-panel>
+            <!-- Document panel -->
+            <ft-document-panel
+                    id="documentsPanel"
+                    name="documents"
+                    style="width:100%; height:100%; "
+                    show-title="false"
+                    show-grid-button="true"
+                    show-list-button="true"
+                    show-preview-button="false"
+                    show-upload-button="false"
+                    show-download-button="false"
+                    show-delete-button="true"
+                    show-document-count="false"
+                    documents="[[documents]]">
+            </ft-document-panel>
 
-                    <!-- Connection panel -->
-                    <ft-connection-panel
-                            id="connectionsPanel"
-                            name="connections"
-                            style="width:100%; height:100%; "
-                            show-title="false"
-                            connections="[[connections]]"
-                            sources="[[sources]]">
-                    </ft-connection-panel>
+        </iron-pages>
 
-                    <!-- Document panel -->
-                    <ft-document-panel
-                            id="documentsPanel"
-                            name="documents"
-                            style="width:100%; height:100%; "
-                            show-title="false"
-                            show-grid-button="true"
-                            show-list-button="true"
-                            show-preview-button="false"
-                            show-upload-button="false"
-                            show-download-button="false"
-                            show-delete-button="true"
-                            show-document-count="false"
-                            documents="[[documents]]">
-                    </ft-document-panel>
+        <!-- Footer -->
+        <div class="layout horizontal start">
 
-                </iron-pages>
-            </div>
+            <paper-button
+                    id="backButton"
+                    on-tap="_onBackButtonTapped"
+                    raised>
+                Back
+            </paper-button>
+
+            <paper-button
+                    id="nextButton"
+                    on-tap="_onNextButtonTapped"
+                    raised>
+                Next
+            </paper-button>
         </div>
 
         <!-- User interaction dialog -->
