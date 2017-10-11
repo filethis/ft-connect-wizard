@@ -45,7 +45,6 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
         <style>
             :host {
                 display:block;
-                border:1px solid #DDD;
                 @apply --layout-vertical;
                 @apply --ft-connect-wizard;
             }
@@ -282,6 +281,46 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                         this._handleError(reason);
                         this.$.modalInteractionDialog.close();
                     }.bind(this));
+            },
+
+            _onBackButtonTapped: function(event)
+            {
+                this._selectedPanelName = this._getPreviousPanelName();
+            },
+
+            _onNextButtonTapped: function(event)
+            {
+                this._selectedPanelName = this._getNextPanelName();
+            },
+
+            _getNextPanelName: function()
+            {
+                switch (this._selectedPanelName)
+                {
+                    case "sources":
+                        return "connections";
+                    case "connections":
+                        return "documents";
+                    case "documents":
+                        return "documents";
+                    default:
+                        return "sources";
+                }
+            },
+
+            _getPreviousPanelName: function()
+            {
+                switch (this._selectedPanelName)
+                {
+                    case "sources":
+                        return "sources";
+                    case "connections":
+                        return "sources";
+                    case "documents":
+                        return "connections";
+                    default:
+                        return "sources";
+                }
             },
 
 //            _onSubmitInteractionResponseNew: function(event)
