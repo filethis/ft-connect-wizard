@@ -93,6 +93,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     style="width:100%; height:100%; "
                     show-title="false"
                     selected-filter-id="{{selectedFilterId}}"
+                    code="{{_sourcesCode}}"
                     sources="[[sources]]">
             </ft-source-panel>
 
@@ -103,6 +104,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     style="width:100%; height:100%; "
                     show-title="false"
                     connections="[[connections]]"
+                    code="{{_connectionsCode}}"
                     sources="[[sources]]">
             </ft-connection-panel>
 
@@ -119,6 +121,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     show-download-button="false"
                     show-delete-button="true"
                     show-document-count="false"
+                    code="{{_documentsCode}}"
                     documents="[[documents]]">
             </ft-document-panel>
 
@@ -174,6 +177,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 hidden
                 href$="[[_downloadUrl]]"
                 download$="[[_downloadFilename]]">
+        </a>
 
         <!-- Confirmation dialog -->
         <ft-confirmation-dialog id="confirmationDialog"></ft-confirmation-dialog>
@@ -215,7 +219,6 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     value: "sources",
                     observer: "_onSelectedPanelNameChanged"
                 }
-
             },
 
 
@@ -226,7 +229,9 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 this.async(function()
                 {
                     this._selectedPanelName = "sources";
-                })
+                });
+
+                this.codeTemplatePath = "../bower_components/ft-connect-wizard/data/code-template.html";
             },
 
             _onRouteDataChanged: function(to, from)
