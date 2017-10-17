@@ -15,11 +15,11 @@ limitations under the License.
 -->
 
 
-<link rel="import" href="../app-route/app-route.html">
 <link rel="import" href="../ft-confirmation-dialog/ft-confirmation-dialog.html">
 <link rel="import" href="../ft-connect-behavior/ft-connect-behavior.html">
 <link rel="import" href="../ft-connection-panel/ft-connection-panel.html">
 <link rel="import" href="../ft-document-panel/ft-document-panel.html">
+<link rel="import" href="../ft-labeled-icon-button/ft-labeled-icon-button.html">
 <link rel="import" href="../ft-source-panel/ft-source-panel.html">
 <link rel="import" href="../ft-user-interaction-form/ft-user-interaction-form.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
@@ -27,6 +27,7 @@ limitations under the License.
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../polymer/polymer.html">
 
 <!--
@@ -50,38 +51,61 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             }
         </style>
 
-        <style is="custom-style">
+        <style>
 
-            /* We use links in our tab bar so that routing will work, but want the text to look "normal" */
-            a {
-                color:black;
-                border:none;
-                text-decoration:none;
-                height: auto !important;
+            .slidein {
+                animation-duration: 1s;
+                animation-name: slidein;
             }
 
-            #panelTabs
-            {
-                --paper-tabs-selection-bar-color:blue;
+            @keyframes slidein {
+                from {
+                    margin-left:100%;
+                }
+
+                to {
+                    margin-left:0;
+                }
+            }
+
+            @keyframes slideout {
+                from {
+                    margin-left:0;
+                }
+
+                to {
+                    margin-left:100%;
+                }
             }
 
         </style>
 
-        <app-route
-            route="{{route}}"
-            pattern="/:panelName"
-            data="{{_routeData}}">
-        </app-route>
-
         <!-- Header -->
-        <div class="layout horizontal start">
-            {{_selectedPanelName}}
+        <div class="layout horizontal center">
+
+            <div class="flex">
+                [[_instructions]]
+            </div>
+
+            <paper-icon-button
+                    on-tap="_onBackButtonTapped"
+                    icon="arrow-back"
+                    alt="back"
+                    title="back">
+            </paper-icon-button>
+            <paper-icon-button
+                    on-tap="_onNextButtonTapped"
+                    icon="arrow-forward"
+                    alt="next"
+                    title="next">
+            </paper-icon-button>
+
         </div>
 
         <!-- Panels -->
         <iron-pages
                 id="panels"
-                class="flex"
+                class="flex layout vertical"
                 style="border-top:1px solid #DDD; "
                 attr-for-selected="name"
                 selected="{{_selectedPanelName}}">
@@ -90,7 +114,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             <ft-source-panel
                     id="sourcesPanel"
                     name="sources"
-                    style="width:100%; height:100%; "
+                    class="flex"
                     show-title="false"
                     selected-filter-id="{{selectedFilterId}}"
                     code="{{_sourcesCode}}"
@@ -101,7 +125,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             <ft-connection-panel
                     id="connectionsPanel"
                     name="connections"
-                    style="width:100%; height:100%; "
+                    class="flex"
                     show-title="false"
                     connections="[[connections]]"
                     code="{{_connectionsCode}}"
@@ -112,7 +136,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             <ft-document-panel
                     id="documentsPanel"
                     name="documents"
-                    style="width:100%; height:100%; "
+                    class="flex"
                     show-title="false"
                     show-grid-button="true"
                     show-list-button="true"
@@ -126,24 +150,6 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             </ft-document-panel>
 
         </iron-pages>
-
-        <!-- Footer -->
-        <div class="layout horizontal start">
-
-            <paper-button
-                    id="backButton"
-                    on-tap="_onBackButtonTapped"
-                    raised>
-                Back
-            </paper-button>
-
-            <paper-button
-                    id="nextButton"
-                    on-tap="_onNextButtonTapped"
-                    raised>
-                Next
-            </paper-button>
-        </div>
 
         <!-- User interaction dialog -->
         <paper-dialog modal id="modalInteractionDialog"
@@ -201,28 +207,21 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             properties: {
 
-                /** Route. */
-                route: {
-                    type: Object,
-                    notify: true
-                },
-
-                _routeData: {
-                    type: Object,
-                    observer: "_onRouteDataChanged"
-                },
-
                 /** Name of the selected panel. One of: "sources", "connections", or "documents". */
                 _selectedPanelName:
                 {
                     type: String,
                     value: "sources",
                     observer: "_onSelectedPanelNameChanged"
+                },
+
+                _instructions:
+                {
+                    type: String,
+                    notify: true,
+                    value: "Instructions"
                 }
             },
-
-
-            // Application _routeData members ------------------------------------------------------------------
 
             ready: function()
             {
@@ -234,22 +233,49 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 this.codeTemplatePath = "../bower_components/ft-connect-wizard/data/code-template.html";
             },
 
-            _onRouteDataChanged: function(to, from)
-            {
-                if (!this._routeData)
-                    return;
-                if (!this._selectedPanelName)
-                    return;
-                this._selectedPanelName = this._routeData.panelName;
-            },
-
             _onSelectedPanelNameChanged: function(to, from)
             {
-                if (!this._routeData)
-                    return;
-                if (!this._selectedPanelName)
-                    return;
-                this._routeData.panelName = this._selectedPanelName;
+                this._instructions = this._getInstructions();
+
+//                var panels = this.$.panels.children;
+//                var toPanel = panels[to];
+//                var fromPanel = panels[from];
+//
+//                if (!toPanel.classList.contains('slidein'))
+//                    toPanel.classList.add("slidein");
+//
+//                if (fromPanel !== undefined)
+//                    fromPanel.classList.remove("slidein");
+            },
+
+            _getInstructions: function()
+            {
+                switch (this._selectedPanelName)
+                {
+                    case "sources":
+                        return this._getInstructionsForSourcePanel();
+                    case "connections":
+                        return this._getInstructionsForConnectionPanel();
+                    case "documents":
+                        return this._getInstructionsForDocumentPanel();
+                    default:
+                        return "";
+                }
+            },
+
+            _getInstructionsForSourcePanel: function()
+            {
+                return "Click on a source to connect to it.";
+            },
+
+            _getInstructionsForConnectionPanel: function()
+            {
+                return "Observe that you have connections.";
+            },
+
+            _getInstructionsForDocumentPanel: function()
+            {
+                return "Observe that you have documents.";
             },
 
 
@@ -290,12 +316,18 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             _onBackButtonTapped: function(event)
             {
-                this._selectedPanelName = this._getPreviousPanelName();
+                var previousPanelName = this._getPreviousPanelName();
+                if (!previousPanelName)
+                    return;
+                this._selectedPanelName = previousPanelName;
             },
 
             _onNextButtonTapped: function(event)
             {
-                this._selectedPanelName = this._getNextPanelName();
+                var nextPanelName = this._getNextPanelName();
+                if (!nextPanelName)
+                    return;
+                this._selectedPanelName = nextPanelName
             },
 
             _getNextPanelName: function()
@@ -307,9 +339,9 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     case "connections":
                         return "documents";
                     case "documents":
-                        return "documents";
+                        return null;
                     default:
-                        return "sources";
+                        return null;
                 }
             },
 
@@ -318,13 +350,13 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 switch (this._selectedPanelName)
                 {
                     case "sources":
-                        return "sources";
+                        return null;
                     case "connections":
                         return "sources";
                     case "documents":
                         return "connections";
                     default:
-                        return "sources";
+                        return null;
                 }
             },
 
