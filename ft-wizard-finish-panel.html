@@ -45,14 +45,104 @@ This element displays a finish of where the user stands in the process of comple
 
         <div
             class="layout vertical"
-            style="width:500px; margin:30px; border:1px solid #DDD; padding:20px; "
+            style="width:550px; margin:30px; border:1px solid #DDD; padding:20px; "
         >
 
-            <!-- Instructions -->
-            <iron-label
-                    style="font-family:Arial; font-size:14pt; ">
-                [[_instructions]]
-            </iron-label>
+            <!-- Instructions for no connections -->
+            <div
+                class="layout horizontal center"
+                style="margin-bottom:20px; "
+                hidden$="[[!_showInstructionsNoConnections]]"
+            >
+                <!-- Instructions -->
+                <iron-label
+                    class="flex"
+                    style="font-family:Arial; font-size:14pt; "
+                >
+                    [[instructionsNoConnections]]
+                </iron-label>
+
+                <!-- Add Connection button -->
+                <paper-button
+                    raised
+                    style="width:120px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; margin-left:16px; "
+                    on-tap="_onAddConnectionButtonClicked"
+                >
+                    Add Connection
+                </paper-button>
+            </div>
+
+            <!-- Instructions for connections still running -->
+            <div
+                class="layout horizontal center"
+                style="margin-bottom:20px; "
+                hidden$="[[!_showInstructionsConnectionsRunning]]"
+            >
+                <!-- Instructions -->
+                <iron-label
+                    class="flex"
+                    style="font-family:Arial; font-size:14pt; "
+                >
+                    [[instructionsConnectionsRunning]]
+                </iron-label>
+
+                <!-- Show Connections button -->
+                <paper-button
+                    raised
+                    style="width:140px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; margin-left:16px; "
+                    on-tap="_onViewConnectionsButtonClicked"
+                >
+                    Show Connections
+                </paper-button>
+            </div>
+
+            <!-- Instructions for pending interactions -->
+            <div
+                class="layout horizontal center"
+                style="margin-bottom:20px; "
+                hidden$="[[!_showInstructionsPendingInteractions]]"
+            >
+                <!-- Instructions -->
+                <iron-label
+                    class="flex"
+                    style="font-family:Arial; font-size:14pt; "
+                >
+                    [[instructionsPendingInteractions]]
+                </iron-label>
+
+                <!-- Show Connections button -->
+                <paper-button
+                    raised
+                    style="width:140px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; margin-left:16px; "
+                    on-tap="_onViewConnectionsButtonClicked"
+                >
+                    Show Connections
+                </paper-button>
+            </div>
+
+            <!-- Instructions for adding more connections -->
+            <div
+                class="layout horizontal center"
+                style="margin-bottom:20px; "
+                hidden$="[[!_showInstructionsAddMoreConnections]]"
+            >
+                <!-- Instructions -->
+                <iron-label
+                    class="flex"
+                    style="font-family:Arial; font-size:14pt; "
+                >
+                    [[instructionsAddMoreConnections]]
+                </iron-label>
+
+                <!-- Action button -->
+                <paper-button
+                    raised
+                    style="width:120px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; margin-left:16px; "
+                    on-tap="_onAddConnectionButtonClicked"
+                >
+                    Add Connection
+                </paper-button>
+            </div>
 
             <div
                 class="layout horizontal center"
@@ -85,9 +175,9 @@ This element displays a finish of where the user stands in the process of comple
 
             is: 'ft-wizard-finish-panel',
 
-            observers: [
-                '_onSituationChanged(connections, documents)'
-            ],
+//            observers: [
+//                '_onSituationChanged(connections, documents)'
+//            ],
 
             properties: {
 
@@ -116,10 +206,59 @@ This element displays a finish of where the user stands in the process of comple
                     value: true
                 },
 
-                _instructions:
+                instructionsNoConnections:
                 {
                     type: String
                 },
+                _showInstructionsNoConnections:
+                {
+                    type: Boolean,
+                    value: false
+                },
+
+                instructionsConnectionsRunning:
+                {
+                    type: String
+                },
+                _showInstructionsConnectionsRunning:
+                {
+                    type: Boolean,
+                    value: false
+                },
+
+                instructionsPendingInteractions:
+                {
+                    type: String
+                },
+                _showInstructionsPendingInteractions:
+                {
+                    type: Boolean,
+                    value: false
+                },
+
+                instructionsAddMoreConnections:
+                {
+                    type: String
+                },
+                _showInstructionsAddMoreConnections:
+                {
+                    type: Boolean,
+                    value: false
+                },
+            },
+
+            ready: function()
+            {
+                // TODO: Is this the best place for this?
+
+                this.instructionsNoConnections =
+                    "You haven't connected to any of your sites, yet.";
+                this.instructionsConnectionsRunning =
+                    "One or more of your connections is still running.";
+                this.instructionsPendingInteractions =
+                    "One or more of your connections needs your help to complete.";
+                this.instructionsAddMoreConnections =
+                    "Would you like to add more connections?";
             },
 
             _onDoneButtonClicked: function()
@@ -127,7 +266,23 @@ This element displays a finish of where the user stands in the process of comple
                 this.fire('wizard-done');
             },
 
-            _onSituationChanged: function()
+            _onAddConnectionButtonClicked: function()
+            {
+                this.fire('wizard-add-connection');
+            },
+
+            _onViewConnectionsButtonClicked: function()
+            {
+                this.fire('wizard-view-connections');
+            },
+
+//            _onSituationChanged: function()
+//            {
+//                this._updateInstructions();
+//            },
+
+            // TODO: Temporary hack until we get the model updates working
+            wasShown: function()
             {
                 this._updateInstructions();
             },
@@ -136,21 +291,70 @@ This element displays a finish of where the user stands in the process of comple
             {
                 var instructions = "";
 
-                var haveConnections = (this.connections.length > 0);
-                if (haveConnections)
-                    instructions += "You have connections";
-                else
-                    instructions += "You have NO connections";
-
-                instructions += "\n";
-
-                var haveDocuments = (this.documents.length > 0);
-                if (haveDocuments)
-                    instructions += "You have documents";
-                else
-                    instructions += "You have NO documents";
+                if (!this._haveConnections())
+                {
+                    this._showInstructionsNoConnections = true;
+                    this._showInstructionsAddMoreConnections = false;
+                    this._showInstructionsConnectionsRunning = false;
+                    this._showInstructionsPendingInteractions = false;
+                }
+                else // have at least one connection
+                {
+                    var someConnectionStillRunning = this._someConnectionStillRunning();
+                    var someConnectionHasPendingInteraction = this._someConnectionHasPendingInteraction();
+                    this._showInstructionsNoConnections = false;
+                    this._showInstructionsAddMoreConnections = true;
+                    this._showInstructionsConnectionsRunning = someConnectionStillRunning && !someConnectionHasPendingInteraction;
+                    this._showInstructionsPendingInteractions = someConnectionHasPendingInteraction;
+                }
 
                 this._instructions = instructions;
+            },
+
+            _haveConnections: function()
+            {
+                return (this.connections.length > 0);
+            },
+
+            _someConnectionStillRunning: function()
+            {
+                var count = this.connections.length;
+                for (var index = 0; index < count; index++)
+                {
+                    var connection = this.connections[index];
+                    if (this._connectionStillRunning(connection))
+                        return true;
+                }
+                return false;
+            },
+
+            _someConnectionHasPendingInteraction: function()
+            {
+                var count = this.connections.length;
+                for (var index = 0; index < count; index++)
+                {
+                    var connection = this.connections[index];
+                    if (this._connectionHasPendingInteraction(connection))
+                        return true;
+                }
+                return false;
+            },
+
+            _connectionStillRunning: function(connection)
+            {
+                switch (connection.state)
+                {
+                    case "waiting":
+                    case "error":
+                        return false;
+                    default:
+                        return true;
+                }
+            },
+
+            _connectionHasPendingInteraction: function(connection)
+            {
+                return (connection.state === "question");
             },
 
         });
