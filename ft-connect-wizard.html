@@ -28,7 +28,13 @@ limitations under the License.
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="../paper-tabs/paper-tab.html">
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="ft-wizard-finish-panel.html">
+<link rel="import" href="ft-wizard-tab.html">
+<link rel="import" href="ft-wizard-tab-bar.html">
+
 
 <!--
 `<ft-connect-wizard>`
@@ -46,6 +52,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
         <style>
             :host {
                 display:block;
+                overflow:hidden;
                 @apply --layout-vertical;
                 @apply --ft-connect-wizard;
             }
@@ -78,111 +85,175 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 }
             }
 
+            .tabNormal
+            {
+                fill:#DDDDDD;
+            }
+
+            .tabSelected
+            {
+                fill:#6B81AC;
+            }
+
         </style>
 
         <!-- Header -->
-        <div class="layout horizontal center">
+        <div
+            class="layout horizontal center"
+            style="height:50px; background-color:#DDD; padding-right:10px; "
+        >
+            <!-- Tabs -->
+            <ft-wizard-tab-bar
+                id="tabs"
+                items="[[_tabs]]"
+                class="flex"
+                style="height:50px; "
+                selected="{{_selectedPanelName}}"
+            >
+            </ft-wizard-tab-bar>
 
-            <div class="flex">
-                [[_instructions]]
-            </div>
+            <!-- Cancel button -->
+            <paper-button
+                raised
+                id="cancelButton"
+                hidden$="[[!showCancelButton]]"
+                style="width:90px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; "
+                on-tap="_onCancelButtonClicked"
+            >
+                Cancel
+            </paper-button>
 
-            <paper-icon-button
-                    on-tap="_onBackButtonTapped"
-                    icon="arrow-back"
-                    alt="back"
-                    title="back">
-            </paper-icon-button>
-            <paper-icon-button
-                    on-tap="_onNextButtonTapped"
-                    icon="arrow-forward"
-                    alt="next"
-                    title="next">
-            </paper-icon-button>
-
+            <!--&lt;!&ndash; Navigation buttons &ndash;&gt;-->
+            <!--<paper-icon-button-->
+                <!--on-tap="_onBackButtonTapped"-->
+                <!--icon="arrow-back"-->
+                <!--alt="back"-->
+                <!--title="back"-->
+            <!--&gt;-->
+            <!--</paper-icon-button>-->
+            <!--<paper-icon-button-->
+                <!--on-tap="_onNextButtonTapped"-->
+                <!--icon="arrow-forward"-->
+                <!--alt="next"-->
+                <!--title="next"-->
+            <!--&gt;-->
+            <!--</paper-icon-button>-->
         </div>
+
+        <!-- Instructions -->
+        <!--<div class="layout horizontal center">-->
+
+            <!--<div-->
+                <!--class="flex"-->
+                <!--style="border:1px solid #DDD; margin:20px; background-color:white; "-->
+            <!--&gt;-->
+                <!--[[_instructions]]-->
+            <!--</div>-->
+
+        <!--</div>-->
 
         <!-- Panels -->
         <iron-pages
-                id="panels"
-                class="flex layout vertical"
-                style="border-top:1px solid #DDD; "
-                attr-for-selected="name"
-                selected="{{_selectedPanelName}}">
+            id="panels"
+            class="flex layout vertical"
+            style="border-top:1px solid #DDD; "
+            attr-for-selected="name"
+            selected="{{_selectedPanelName}}"
+        >
 
             <!-- Source panel -->
             <ft-source-panel
-                    id="sourcesPanel"
-                    name="sources"
-                    class="flex"
-                    show-title="false"
-                    selected-filter-id="{{selectedFilterId}}"
-                    code="{{_sourcesCode}}"
-                    sources="[[sources]]">
+                id="sourcesPanel"
+                name="step1"
+                class="flex"
+                show-title="true"
+                title="Click on a site to connect to it and fetch your documents"
+                selected-filter-id="{{selectedFilterId}}"
+                code="{{_sourcesCode}}"
+                sources="[[sources]]"
+            >
             </ft-source-panel>
 
             <!-- Connection panel -->
             <ft-connection-panel
-                    id="connectionsPanel"
-                    name="connections"
-                    class="flex"
-                    show-title="false"
-                    connections="[[connections]]"
-                    code="{{_connectionsCode}}"
-                    sources="[[sources]]">
+                id="connectionsPanel"
+                name="step2"
+                class="flex"
+                show-title="true"
+                title="Connections to your sites"
+                connections="[[connections]]"
+                code="{{_connectionsCode}}"
+                sources="[[sources]]"
+            >
             </ft-connection-panel>
 
             <!-- Document panel -->
             <ft-document-panel
-                    id="documentsPanel"
-                    name="documents"
-                    class="flex"
-                    show-title="false"
-                    show-grid-button="true"
-                    show-list-button="true"
-                    show-preview-button="false"
-                    show-upload-button="false"
-                    show-download-button="false"
-                    show-delete-button="true"
-                    show-document-count="false"
-                    code="{{_documentsCode}}"
-                    documents="[[documents]]">
+                id="documentsPanel"
+                name="step3"
+                class="flex"
+                show-title="true"
+                title="Documents fetched from your sites"
+                show-grid-button="true"
+                show-list-button="true"
+                show-preview-button="false"
+                show-upload-button="false"
+                show-download-button="false"
+                show-delete-button="false"
+                show-document-count="false"
+                code="{{_documentsCode}}"
+                documents="[[documents]]"
+            >
             </ft-document-panel>
+
+            <!-- Finish panel -->
+            <ft-wizard-finish-panel
+                id="finishPanel"
+                name="step4"
+                class="flex"
+                connections="[[connections]]"
+                documents="[[documents]]"
+            >
+            </ft-wizard-finish-panel>
 
         </iron-pages>
 
         <!-- User interaction dialog -->
         <paper-dialog modal id="modalInteractionDialog"
-                      style="width:450px;
-                      padding-left:40px; padding-top:12px; padding-right:40px; padding-bottom:5px;">
+            style="width:450px;
+            padding-left:40px; padding-top:12px; padding-right:40px; padding-bottom:5px;"
+        >
 
             <ft-user-interaction-form
-                    id="interactionForm"
-                    version="[[interactionVersion]]"
-                    request="[[_interactionRequest]]"
-                    response="{{_interactionResponse}}"
-                    on-submit-response="_onSubmitInteractionResponse"
-                    on-button-clicked="_onInteractionFormButtonClicked"
-                    style="background:white; border:1px solid #DDD;">
+                id="interactionForm"
+                version="[[interactionVersion]]"
+                request="[[_interactionRequest]]"
+                response="{{_interactionResponse}}"
+                on-submit-response="_onSubmitInteractionResponse"
+                on-button-clicked="_onInteractionFormButtonClicked"
+                style="background:white; border:1px solid #DDD;"
+            >
             </ft-user-interaction-form>
 
         </paper-dialog>
 
         <!-- Uploader -->
         <input
-                id="uploader"
-                hidden
-                type="file"
-                on-change="_onUploaderFilesChanged"
-                multiple="true"
-                accept="[[_uploadableFileTypes]]">
+            id="uploader"
+            hidden
+            type="file"
+            on-change="_onUploaderFilesChanged"
+            multiple="true"
+            accept="[[_uploadableFileTypes]]"
+        >
 
         <!-- Downloader -->
         <a
-                id="downloader"
-                hidden
-                href$="[[_downloadUrl]]"
-                download$="[[_downloadFilename]]">
+            id="downloader"
+            hidden
+            href$="[[_downloadUrl]]"
+            download$="[[_downloadFilename]]"
+        >
         </a>
 
         <!-- Confirmation dialog -->
@@ -194,6 +265,18 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
         Polymer({
 
             is: 'ft-connect-wizard',
+
+            /**
+             * Fired when the "Cancel" button is clicked.
+             *
+             * @event wizard-canceled
+             */
+
+            /**
+             * Fired when the "Done" button is clicked on the final page.
+             *
+             * @event wizard-done
+             */
 
             behaviors: [
                 FileThis.ConnectBehavior,
@@ -207,11 +290,24 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             properties: {
 
+                /**
+                 * Show a "Cancel" button in the navigation bar.
+                 *
+                 * Note that you can provide the strings "true" and "false" as attribute values .
+                 *
+                 * @type {boolean}
+                 */
+                showCancelButton:
+                {
+                    type: Object,
+                    value: true
+                },
+
                 /** Name of the selected panel. One of: "sources", "connections", or "documents". */
                 _selectedPanelName:
                 {
                     type: String,
-                    value: "sources",
+                    value: "step1",
                     observer: "_onSelectedPanelNameChanged"
                 },
 
@@ -220,6 +316,33 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     type: String,
                     notify: true,
                     value: "Instructions"
+                },
+
+                _tabs:
+                {
+                    type: Array,
+                    value: [
+                        {
+                            "name": "step1",
+                            "title": "Step 1",
+                            "subtitle": "Sites"
+                        },
+                        {
+                            "name": "step2",
+                            "title": "Step 2",
+                            "subtitle": "Connections"
+                        },
+                        {
+                            "name": "step3",
+                            "title": "Step 3",
+                            "subtitle": "Documents"
+                        },
+                        {
+                            "name": "step4",
+                            "title": "Step 4",
+                            "subtitle": "Finish"
+                        }
+                    ]
                 }
             },
 
@@ -231,6 +354,11 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 });
 
                 this.codeTemplatePath = "../bower_components/ft-connect-wizard/data/code-template.html";
+            },
+
+            _onCancelButtonClicked: function()
+            {
+                this.fire('wizard-canceled');
             },
 
             _onSelectedPanelNameChanged: function(to, from)
@@ -252,12 +380,14 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             {
                 switch (this._selectedPanelName)
                 {
-                    case "sources":
+                    case "step1":
                         return this._getInstructionsForSourcePanel();
-                    case "connections":
+                    case "step2":
                         return this._getInstructionsForConnectionPanel();
-                    case "documents":
+                    case "step3":
                         return this._getInstructionsForDocumentPanel();
+                    case "step4":
+                        return this._getInstructionsForFinishPanel();
                     default:
                         return "";
                 }
@@ -276,6 +406,10 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             _getInstructionsForDocumentPanel: function()
             {
                 return "Observe that you have documents.";
+            },
+
+            _getInstructionsForFinishPanel: function()
+            {
             },
 
 
@@ -316,48 +450,12 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             _onBackButtonTapped: function(event)
             {
-                var previousPanelName = this._getPreviousPanelName();
-                if (!previousPanelName)
-                    return;
-                this._selectedPanelName = previousPanelName;
+                this.$.tabs.selectPrevious();
             },
 
             _onNextButtonTapped: function(event)
             {
-                var nextPanelName = this._getNextPanelName();
-                if (!nextPanelName)
-                    return;
-                this._selectedPanelName = nextPanelName
-            },
-
-            _getNextPanelName: function()
-            {
-                switch (this._selectedPanelName)
-                {
-                    case "sources":
-                        return "connections";
-                    case "connections":
-                        return "documents";
-                    case "documents":
-                        return null;
-                    default:
-                        return null;
-                }
-            },
-
-            _getPreviousPanelName: function()
-            {
-                switch (this._selectedPanelName)
-                {
-                    case "sources":
-                        return null;
-                    case "connections":
-                        return "sources";
-                    case "documents":
-                        return "connections";
-                    default:
-                        return null;
-                }
+                this.$.tabs.selectNext();
             },
 
 //            _onSubmitInteractionResponseNew: function(event)
@@ -413,8 +511,8 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             {
                 var origin = event.path[0];
                 if (origin.id === "createConnectionDialog")
-                    this._selectedPanelName = "connections";  // TODO: Make this a configurable option?
-            }
+                    this._selectedPanelName = "step2";
+            },
 
         });
     </script>
