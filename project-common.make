@@ -36,9 +36,14 @@ github-init:  ## Initialize GitHub project
 	git push -u origin master
 
 .PHONY: bower-install-packages
-bower-install-packages:  ## Install all Bower packages specified in bower.json file
+bower-install-packages:  ## Install all Bower packages specified in bower.json file, using symlinks for FileThis projects.
 	@mkdir -p ./bower_components; \
 	python ../../bin/bower-install.py True ${GITHUB_USER_ABBREV}
+
+.PHONY: bower-install-packages-prod
+bower-install-packages-prod:  ## Install all Bower packages specified in bower.json file
+	@mkdir -p ./bower_components; \
+	python ../../bin/bower-install.py False ${GITHUB_USER_ABBREV}
 
 .PHONY: bower-clean-packages
 bower-clean-packages:  ## Clean all installed bower packages.
@@ -46,7 +51,10 @@ bower-clean-packages:  ## Clean all installed bower packages.
 	find . -mindepth 1 -maxdepth 1 -exec rm -rf {} +;
 
 .PHONY: bower-reinstall-packages
-bower-reinstall-packages: bower-clean-packages bower-install-packages  ## Clean and reinstall all bower packages.
+bower-reinstall-packages: bower-clean-packages bower-install-packages  ## Clean and reinstall all bower packages using symlinks for FileThis projects.
+
+.PHONY: bower-reinstall-packages-prod
+bower-reinstall-packages-prod: bower-clean-packages bower-packages-prod  ## Clean and reinstall all bower packages.
 
 
 # Testing -----------------------------------------------------------------------------------
@@ -166,6 +174,22 @@ git-status:  ## Print git status
 
 .PHONY: lint
 lint: polymerlint eslint ## Run all linters on project files
+
+
+# cdnify -----------------------------------------------------------------------------------
+
+.PHONY: cdnify
+cdnify:  ## cdnify
+	python ../../bin/cdnify.py \
+		--local-base-dir="./bower_components" \
+		--new-base-url="https://github.com/filethis/${NAME}/blob/${VERSION}/bower_components";
+
+.PHONY: cdnify-dry-run
+cdnify-dry-run:  ## cdnify-dry-run
+	python ../../bin/cdnify.py \
+		--dry-run \
+		--local-base-dir="./bower_components" \
+		--new-base-url="https://github.com/filethis/${NAME}/blob/${VERSION}/bower_components";
 
 
 # Help -----------------------------------------------------------------------------------
