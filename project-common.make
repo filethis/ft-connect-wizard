@@ -54,7 +54,7 @@ bower-clean-packages:  ## Clean all installed bower packages.
 bower-reinstall-packages: bower-clean-packages bower-install-packages  ## Clean and reinstall all bower packages using symlinks for FileThis projects.
 
 .PHONY: bower-reinstall-packages-prod
-bower-reinstall-packages-prod: bower-clean-packages bower-packages-prod  ## Clean and reinstall all bower packages.
+bower-reinstall-packages-prod: bower-clean-packages bower-install-packages-prod  ## Clean and reinstall all bower packages.
 
 
 # Testing -----------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ set-version-everywhere:
 	echo Set version in all projects that depend on this one
 
 .PHONY: git-tag-version-and-push
-git-tag-version-and-push:  # Internal target: Tag with current version and push tags to remote for the git project. Usually invoked as part of a release via 'release' target.
+git-tag-version-and-push:  ## Tag with current version and push tags to remote for the git project. Usually invoked as part of a release via 'release' target.
 	@if [[ $$(git tag --list v${VERSION}) ]]; then \
 		echo Tag v${VERSION} already applied; \
 	else \
@@ -131,6 +131,10 @@ bump-version:  ## Increment the patch version number.
 
 .PHONY: release
 release: set-version-everywhere git-add-fast git-commit-fast git-push git-tag-version-and-push bower-register publish-github-pages ## Release version of project.
+	@echo Released version ${VERSION} of \"${NAME}\" project
+
+.PHONY: release-cdn
+release-cdn: set-version-everywhere bower-reinstall-packages-prod cdnify git-add-fast git-commit-fast git-push git-tag-version-and-push ## Release version of project.
 	@echo Released version ${VERSION} of \"${NAME}\" project
 
 
@@ -182,14 +186,14 @@ lint: polymerlint eslint ## Run all linters on project files
 cdnify:  ## cdnify
 	python ../../bin/cdnify.py \
 		--local-base-dir="./bower_components" \
-		--new-base-url="https://github.com/filethis/${NAME}/blob/${VERSION}/bower_components";
+		--new-base-url="https://rawgit.com/filethis/${NAME}/v${VERSION}/bower_components/";
 
 .PHONY: cdnify-dry-run
 cdnify-dry-run:  ## cdnify-dry-run
 	python ../../bin/cdnify.py \
 		--dry-run \
 		--local-base-dir="./bower_components" \
-		--new-base-url="https://github.com/filethis/${NAME}/blob/${VERSION}/bower_components";
+		--new-base-url="https://rawgit.com/filethis/${NAME}/v${VERSION}/bower_components/";
 
 
 # Help -----------------------------------------------------------------------------------
