@@ -54,6 +54,7 @@ An element that implements a tab bar with arrow-shaped tabs.
                     as="item">
 
                 <ft-wizard-tab
+                    id="[[item.id]]"
                     name="[[item.name]]"
                     style="width:120px; "
                     title="[[item.title]]"
@@ -74,7 +75,8 @@ An element that implements a tab bar with arrow-shaped tabs.
 
             listeners:
             {
-                'wizard-tab-clicked': '_onTabClicked'
+                'wizard-tab-body-clicked': '_onTabBodyClicked',
+                'wizard-tab-tail-clicked': '_onTabTailClicked'
             },
 
             properties: {
@@ -93,10 +95,25 @@ An element that implements a tab bar with arrow-shaped tabs.
                 }
             },
             
-            _onTabClicked: function(event)
+            findTabWithId: function(id)
             {
-                var name = event.detail;
-                this.selected = name;
+                var tab = this.$$("#" + id);
+                return tab;
+            },
+
+            _onTabBodyClicked: function(event)
+            {
+                var tabName = event.detail;
+                this.selected = tabName;
+            },
+
+            _onTabTailClicked: function(event)
+            {
+                var tabName = event.detail;
+                var nextTab = this._getNextTab(tabName);
+                if (!nextTab)
+                    return;
+                this.selected = nextTab.name;
             },
 
             _onSelectedChanged: function(toName, fromName)

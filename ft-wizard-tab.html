@@ -17,6 +17,8 @@ limitations under the License.
 
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-pages/iron-pages.html">
+<link rel="import" href="../paper-badge/paper-badge.html">
+<link rel="import" href="../paper-spinner/paper-spinner-lite.html">
 <link rel="import" href="../polymer/polymer.html">
 
 
@@ -41,23 +43,76 @@ An element that implements an arrow-shaped tab for a tab bar.
                 cursor:pointer;
                 @apply --ft-wizard-tab;
             }
+
+            .pulsate {
+                animation-name: pulsate;
+                animation-duration: 0.5s;
+                animation-iteration-count: infinite;
+                animation-timing-function: ease-in;
+                animation-direction: alternate;
+            }
+
+            @keyframes pulsate {
+                from { r:40px; }
+                to { r:50px; }
+            }
+
         </style>
+
+        <!-- Background body -->
+        <svg
+            viewBox="0 0 100 100"
+            style="position:absolute; z-index:1; width:100%; height:100%; "
+            preserveAspectRatio="none"
+            on-tap="_onTabBodyTapped"
+        >
+            <polygon
+                style="fill:[[_bodyFill]]; "
+                points="0,0 80,0 100,50 80,100 0,100 0,0"
+            >
+            </polygon>
+        </svg>
+
+        <!-- Background tail -->
+        <svg
+            viewBox="0 0 100 100"
+            style="
+                position:absolute;
+                z-index:2;
+                width:100%; height:100%;
+                "
+            preserveAspectRatio="none"
+            on-click="_onTabTailClicked"
+        >
+            <polygon
+                id="main"
+                style="fill:[[_nextTailFill]]; "
+                points="80,0 100,0 100,100 80,100 100,50 80,0"
+            >
+            </polygon>
+            <path
+                id="divider"
+                fill="transparent"
+                style="stroke:white; stroke-width:2; "
+                d="M 80 0  L 100 50  L 80 100"
+            >
+            </path>
+        </svg>
 
         <!-- Label -->
         <div
             id="mainDiv"
-            style="position:absolute; z-index:2; width:100%; height:100%; "
+            style="position:absolute; z-index:3; left:0px; right:20px; height:100%; "
             class="layout vertical center center-justified"
-            on-tap="_tabClicked"
+            on-tap="_onTabBodyTapped"
         >
             <div
                 class="layout vertical"
-                style="padding-right:20px; "
             >
                 <!-- Title -->
                 <iron-label
                     id="title"
-                    style="font-family:Arial; font-size:12pt; "
+                    style="font-family:Arial; font-size:12pt;  "
                 >
                     [[title]]
                 </iron-label>
@@ -72,26 +127,37 @@ An element that implements an arrow-shaped tab for a tab bar.
             </div>
         </div>
 
-        <!-- Background -->
-        <svg
-            width="100%" height="100%"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
+        <!-- Spinner -->
+        <paper-spinner-lite
+            id="spinner"
+            active="[[showSpinner]]"
+            hidden$="[[!showSpinner]]"
+            style="position:absolute; z-index:4; width:17px; height:17px; right:14px; top:16px; --paper-spinner-stroke-width:2px; "
+            on-tap="_onTabBodyTapped"
         >
-            <polygon
-                style="fill:[[_bodyFill]]; "
-                points="0,0 80,0 100,50 80,100 0,100 0,0">
-            </polygon>
-            <polygon
-                style="fill:[[_nextTailFill]]; "
-                points="80,0 100,0 100,100 80,100 100,50 80,0">
-            </polygon>
-            <path
-                fill="transparent"
-                style="stroke:white; stroke-width:2; "
-                d="M 80 0  L 100 50  L 80 100">
-            </path>
+        </paper-spinner-lite>
+
+        <!-- Badge Background -->
+        <svg
+            id="badge"
+            hidden$="[[!showBadge]]"
+            viewBox="0 0 100 100"
+            style="position:absolute; z-index:5; width:25px; height:25px; right:13px; top:13px; "
+            preserveAspectRatio="none"
+            on-tap="_onTabBodyTapped"
+        >
+            <circle id="badgeCircle" cx="50" cy="50" r="40" stroke="none" fill="#AAA"/>
         </svg>
+
+        <!-- Badge Label -->
+        <iron-label
+            id="badgeLabel"
+            hidden$="[[!showBadge]]"
+            style="position:absolute; z-index:6; font-family:Arial; font-size:9pt; width:25px; height:25px; right:13px; top:13px; text-align:center; margin-top:6px; "
+            on-tap="_onTabBodyTapped"
+        >
+            [[badgeLabel]]
+        </iron-label>
 
     </template>
 
@@ -123,6 +189,44 @@ An element that implements an arrow-shaped tab for a tab bar.
                     type: String
                 },
 
+                showSpinner:
+                {
+                    type: Object,
+                    value: false,
+                },
+
+                showBadge:
+                {
+                    type: Object,
+                    value: false,
+                },
+
+                badgeLabel:
+                {
+                    type: String,
+                    value: "?",
+                    observer: "_onBadgeLabelChanged"
+                },
+
+                badgeIcon:
+                {
+                    type: String,
+                    value: ""
+                },
+
+                badgePulsate:
+                {
+                    type: Object,
+                    value: false,
+                    observer: "_onBadgePulsateChanged"
+                },
+
+                badgeFlashOnLabelChange:
+                {
+                    type: Object,
+                    value: true,
+                },
+
                 selected:
                 {
                     type: Object,
@@ -149,27 +253,88 @@ An element that implements an arrow-shaped tab for a tab bar.
 
             },
 
-            _tabClicked: function(event)
+            _onTabBodyTapped: function(event)
             {
-//                var target = event.target;
-//                var id = target.id;
+                this.fire('wizard-tab-body-clicked', this.name);
+            },
+            
+            _onTabTailClicked: function(event)
+            {
+                switch (event.target.id)
+                {
+                    case "main":
+                        this.fire('wizard-tab-tail-clicked', this.name);
+                        break;
 
-                this.fire('wizard-tab-clicked', this.name);
+                    case "divider":
+                    default:
+                        this.fire('wizard-tab-body-clicked', this.name);
+                        break;
+                }
+            },
+
+            _onBadgeLabelChanged: function()
+            {
+                if (!this.showBadge)
+                    return;
+                if (!this.badgeFlashOnLabelChange)
+                    return;
+                if (!this.badgeLabel)
+                    return;
+
+                // TODO: Add one-shot animation here
+            },
+
+            _onBadgePulsateChanged: function(to, from)
+            {
+                var circle = this.$.badgeCircle;
+                if (to) // pulsate
+                {
+                    if (!circle.classList.contains('pulsate'))
+                        circle.classList.add("pulsate");
+                }
+                else // don't pulsate
+                {
+                    if (circle.classList.contains('pulsate'))
+                        circle.classList.remove("pulsate");
+                }
             },
 
             _onSelectedChanged: function(to, from)
             {
-                if (to)
+                if (to)  // selected
                 {
                     this._bodyFill = "#6B81AC";
                     this.$.title.style.color = "white";
                     this.$.subtitle.style.color = "white";
+
+                    // Set badge styles
+//                    this.$.badge.updateStyles({
+//                        '--paper-badge-background': "#AAA",
+//                        '--paper-badge-text-color': "black"
+//                    });
+
+                    // Set spinner styles
+                    this.$.spinner.updateStyles({
+                        '--paper-spinner-color': "#DDD"
+                    });
                 }
-                else
+                else  // unselected
                 {
                     this._bodyFill = "#DDDDDD";
                     this.$.title.style.color = "black";
                     this.$.subtitle.style.color = "black";
+
+                    // Set badge styles
+//                    this.$.badge.updateStyles({
+//                        '--paper-badge-background': "#AAA",
+//                        '--paper-badge-text-color': "black"
+//                    });
+
+                    // Set spinner styles
+                    this.$.spinner.updateStyles({
+                        '--paper-spinner-color': "#AAA"
+                    });
                 }
             },
 

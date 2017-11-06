@@ -18,6 +18,7 @@ limitations under the License.
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-label/iron-label.html">
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="ft-prompt-with-button.html">
 
 
 <!--
@@ -45,110 +46,55 @@ This element displays a finish of where the user stands in the process of comple
 
         <div
             class="layout vertical"
-            style="max-width:550px; margin:30px; border:1px solid #DDD; padding:20px; "
+            style="
+                max-width:550px;
+                margin:30px;
+            "
         >
-
             <!-- Instructions for no connections -->
-            <div
-                class="layout horizontal center"
+            <ft-prompt-with-button
                 style="margin-bottom:20px; "
                 hidden$="[[!_showInstructionsNoConnections]]"
+                prompt="[[instructionsNoConnections]]"
+                button-label="Connect Site"
+                command="wizard-add-connection-command"
             >
-                <!-- Instructions -->
-                <iron-label
-                    class="flex"
-                    style="font-family:Arial; font-size:14pt; "
-                >
-                    [[instructionsNoConnections]]
-                </iron-label>
-
-                <!-- Add Connection button -->
-                <paper-button
-                    raised
-                    style="width:120px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; margin-left:16px; "
-                    on-tap="_onAddConnectionButtonClicked"
-                >
-                    Add Connection
-                </paper-button>
-            </div>
+            </ft-prompt-with-button>
 
             <!-- Instructions for connections still running -->
-            <div
-                class="layout horizontal center"
+            <ft-prompt-with-button
                 style="margin-bottom:20px; "
                 hidden$="[[!_showInstructionsConnectionsRunning]]"
+                prompt="[[instructionsConnectionsRunning]]"
+                button-label="Show Connections"
+                command="wizard-view-connections-command"
             >
-                <!-- Instructions -->
-                <iron-label
-                    class="flex"
-                    style="font-family:Arial; font-size:14pt; "
-                >
-                    [[instructionsConnectionsRunning]]
-                </iron-label>
-
-                <!-- Show Connections button -->
-                <paper-button
-                    raised
-                    style="width:140px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; margin-left:16px; "
-                    on-tap="_onViewConnectionsButtonClicked"
-                >
-                    Show Connections
-                </paper-button>
-            </div>
+            </ft-prompt-with-button>
 
             <!-- Instructions for pending interactions -->
-            <div
-                class="layout horizontal center"
+            <ft-prompt-with-button
                 style="margin-bottom:20px; "
                 hidden$="[[!_showInstructionsPendingInteractions]]"
+                prompt="[[instructionsPendingInteractions]]"
+                button-label="Show Connections"
+                command="wizard-view-connections-command"
             >
-                <!-- Instructions -->
-                <iron-label
-                    class="flex"
-                    style="font-family:Arial; font-size:14pt; "
-                >
-                    [[instructionsPendingInteractions]]
-                </iron-label>
-
-                <!-- Show Connections button -->
-                <paper-button
-                    raised
-                    style="width:140px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; margin-left:16px; "
-                    on-tap="_onViewConnectionsButtonClicked"
-                >
-                    Show Connections
-                </paper-button>
-            </div>
+            </ft-prompt-with-button>
 
             <!-- Instructions for adding more connections -->
-            <div
-                class="layout horizontal center"
+            <ft-prompt-with-button
                 style="margin-bottom:20px; "
                 hidden$="[[!_showInstructionsAddMoreConnections]]"
+                prompt="[[instructionsAddMoreConnections]]"
+                button-label="Connect Site"
+                command="wizard-add-connection-command"
             >
-                <!-- Instructions -->
-                <iron-label
-                    class="flex"
-                    style="font-family:Arial; font-size:14pt; "
-                >
-                    [[instructionsAddMoreConnections]]
-                </iron-label>
+            </ft-prompt-with-button>
 
-                <!-- Action button -->
-                <paper-button
-                    raised
-                    style="width:120px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; margin-left:16px; "
-                    on-tap="_onAddConnectionButtonClicked"
-                >
-                    Add Connection
-                </paper-button>
-            </div>
-
+            <!-- Done -->
             <div
                 class="layout horizontal center"
-                style="margin-top:15px; "
             >
-
                 <!-- Spacer -->
                 <div class="flex"></div>
 
@@ -157,7 +103,13 @@ This element displays a finish of where the user stands in the process of comple
                     raised
                     id="doneButton"
                     hidden$="[[!showDoneButton]]"
-                    style="width:90px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; "
+                    style="
+                        width:90px; height:32px;
+                        font-size:14px;
+                        background-color:white;
+                        text-transform: none;
+                        border:1px solid #DDD;
+                    "
                     on-tap="_onDoneButtonClicked"
                 >
                     Done
@@ -165,7 +117,6 @@ This element displays a finish of where the user stands in the process of comple
             </div>
 
         </div>
-
 
 
     </template>
@@ -252,7 +203,7 @@ This element displays a finish of where the user stands in the process of comple
                 // TODO: Is this the best place for this?
 
                 this.instructionsNoConnections =
-                    "You haven't connected to any of your sites, yet.";
+                    "Please connect to a site to collect your documents.";
                 this.instructionsConnectionsRunning =
                     "One or more of your connections is still running.";
                 this.instructionsPendingInteractions =
@@ -263,17 +214,7 @@ This element displays a finish of where the user stands in the process of comple
 
             _onDoneButtonClicked: function()
             {
-                this.fire('wizard-done');
-            },
-
-            _onAddConnectionButtonClicked: function()
-            {
-                this.fire('wizard-add-connection');
-            },
-
-            _onViewConnectionsButtonClicked: function()
-            {
-                this.fire('wizard-view-connections');
+                this.fire('wizard-done-command');
             },
 
 //            _onSituationChanged: function()
@@ -346,6 +287,7 @@ This element displays a finish of where the user stands in the process of comple
                 {
                     case "waiting":
                     case "error":
+                    case "question":
                         return false;
                     default:
                         return true;

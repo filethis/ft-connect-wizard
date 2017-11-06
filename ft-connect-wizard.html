@@ -24,6 +24,7 @@ limitations under the License.
 <link rel="import" href="../ft-user-interaction-form/ft-user-interaction-form.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-pages/iron-pages.html">
+<link rel="import" href="../paper-badge/paper-badge.html">
 <link rel="import" href="../paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../paper-dialog/paper-dialog.html">
 <link rel="import" href="../paper-button/paper-button.html">
@@ -31,6 +32,7 @@ limitations under the License.
 <link rel="import" href="../paper-tabs/paper-tabs.html">
 <link rel="import" href="../paper-tabs/paper-tab.html">
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="ft-prompt-with-button.html">
 <link rel="import" href="ft-wizard-finish-panel.html">
 <link rel="import" href="ft-wizard-tab.html">
 <link rel="import" href="ft-wizard-tab-bar.html">
@@ -104,7 +106,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
         >
             <!-- Tabs -->
             <ft-wizard-tab-bar
-                id="tabs"
+                id="tabBar"
                 items="[[_tabs]]"
                 class="flex"
                 style="height:50px; "
@@ -174,37 +176,79 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             >
             </ft-source-panel>
 
-            <!-- Connection panel -->
-            <ft-connection-panel
-                id="connectionsPanel"
+            <!-- Connection panel or prompt -->
+            <div
                 name="step2"
-                class="flex"
-                show-title="true"
-                title="Connections to your sites"
-                connections="[[connections]]"
-                code="{{_connectionsCode}}"
-                sources="[[sources]]"
+                class="flex layout horizontal"
             >
-            </ft-connection-panel>
+                <!-- Connection panel -->
+                <ft-connection-panel
+                    id="connectionsPanel"
+                    hidden$="[[_showConnectionPrompt]]"
+                    class="flex"
+                    show-title="true"
+                    title="Connections to your sites"
+                    connections="[[connections]]"
+                    code="{{_connectionsCode}}"
+                    sources="[[sources]]"
+                >
+                </ft-connection-panel>
 
-            <!-- Document panel -->
-            <ft-document-panel
-                id="documentsPanel"
+                <!-- Prompt user to create connections -->
+                <div
+                    id="connectionsPrompt"
+                    hidden$="[[!_showConnectionPrompt]]"
+                    class="flex layout vertical center"
+                >
+                    <ft-prompt-with-button
+                        style="max-width:550px; margin:30px; "
+                        prompt="Once you've created connections to your sites, they will appear here."
+                        button-label="Connect Site"
+                        command="wizard-add-connection-command"
+                    >
+                    </ft-prompt-with-button>
+                </div>
+            </div>
+
+            <!-- Document panel or prompt -->
+            <div
                 name="step3"
-                class="flex"
-                show-title="true"
-                title="Documents fetched from your sites"
-                show-grid-button="true"
-                show-list-button="true"
-                show-preview-button="false"
-                show-upload-button="false"
-                show-download-button="false"
-                show-delete-button="false"
-                show-document-count="false"
-                code="{{_documentsCode}}"
-                documents="[[documents]]"
+                class="flex layout horizontal"
             >
-            </ft-document-panel>
+                <!-- Document panel -->
+                <ft-document-panel
+                    id="documentsPanel"
+                    hidden$="[[_showDocumentPrompt]]"
+                    class="flex"
+                    show-title="true"
+                    title="Documents fetched from your sites"
+                    show-grid-button="true"
+                    show-list-button="true"
+                    show-preview-button="false"
+                    show-upload-button="false"
+                    show-download-button="false"
+                    show-delete-button="false"
+                    show-document-count="false"
+                    code="{{_documentsCode}}"
+                    documents="[[documents]]"
+                >
+                </ft-document-panel>
+
+                <!-- Prompt user to create connections -->
+                <div
+                    id="documentsPrompt"
+                    hidden$="[[!_showDocumentPrompt]]"
+                    class="flex layout vertical center"
+                >
+                    <ft-prompt-with-button
+                        style="max-width:550px; margin:30px; "
+                        prompt="Once you've created connections to your sites, and we have fetched documents from them, they will appear here."
+                        button-label="Connect Site"
+                        command="wizard-add-connection-command"
+                    >
+                    </ft-prompt-with-button>
+                </div>
+            </div>
 
             <!-- Finish panel -->
             <ft-wizard-finish-panel
@@ -229,7 +273,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 version="[[interactionVersion]]"
                 request="[[_interactionRequest]]"
                 response="{{_interactionResponse}}"
-                on-submit-response="_onSubmitInteractionResponse"
+                on-submit-response-command="_onSubmitInteractionResponseCommand"
                 on-button-clicked="_onInteractionFormButtonClicked"
                 style="background:white; border:1px solid #DDD;"
             >
@@ -269,13 +313,13 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             /**
              * Fired when the "Cancel" button is clicked.
              *
-             * @event wizard-canceled
+             * @event wizard-canceled-command
              */
 
             /**
              * Fired when the "Done" button is clicked on the final page.
              *
-             * @event wizard-done
+             * @event wizard-done-command
              */
 
             behaviors: [
@@ -286,10 +330,18 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             listeners:
             {
-                'commit': '_onCommitLocal',
-                'wizard-add-connection': '_onAddConnection',
-                'wizard-view-connections': '_onViewConnections'
+                'create-connection-command': '_onCreateConnectionCommand',
+                'wizard-add-connection-command': '_onWizardAddConnectionCommand',
+                'wizard-view-connections-command': '_onWizardViewConnectionsCommand'
             },
+
+            observers:[
+                '_onWizardConnectionsChanged(connections)',
+                '_onWizardConnectionsChanged(connections.splices)',
+                '_onWizardConnectionsChanged(connections.*)',
+                '_onWizardDocumentsChanged(documents)',
+                '_onWizardDocumentsChanged(documents.splices)',
+            ],
 
             properties: {
 
@@ -320,26 +372,42 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     value: "Instructions"
                 },
 
+                _showConnectionPrompt:
+                {
+                    type: Boolean,
+                    value: false
+                },
+
+                _showDocumentPrompt:
+                {
+                    type: Boolean,
+                    value: false
+                },
+
                 _tabs:
                 {
                     type: Array,
                     value: [
                         {
+                            "id": "step1",
                             "name": "step1",
                             "title": "Step 1",
                             "subtitle": "Sites"
                         },
                         {
+                            "id": "step2",
                             "name": "step2",
                             "title": "Step 2",
                             "subtitle": "Connections"
                         },
                         {
+                            "id": "step3",
                             "name": "step3",
                             "title": "Step 3",
                             "subtitle": "Documents"
                         },
                         {
+                            "id": "step4",
                             "name": "step4",
                             "title": "Step 4",
                             "subtitle": "Finish"
@@ -350,25 +418,107 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             ready: function()
             {
+                // TODO: This is brittle. Get rid of it.
                 this.async(function()
                 {
                     this._selectedPanelName = "step1";
                 });
+            },
 
-                this.codeTemplatePath = "../bower_components/ft-connect-wizard/data/code-template.html";
+            _onAddConnectionButtonClicked: function()
+            {
+                this.fire('wizard-add-connection-command');
+            },
+
+            _onWizardConnectionsChanged: function()
+            {
+                var tab = this._findTabWithId("step2");
+                if (!tab)
+                    return;
+
+                var showConnectionPrompt = false;
+                var showSpinner = false;
+                var showBadge = false;
+                var badgeLabel = "";
+                var badgePulsate = false;
+
+                var connectionCount = this.connections.length;
+
+                var noConnectionsYet = (connectionCount === 0);
+                if (noConnectionsYet)
+                {
+                    showConnectionPrompt = true;
+                }
+                else if (this.someConnectionStillRunning())
+                {
+                    showSpinner = true;
+                }
+                else if (this.someConnectionHasPendingInteraction())
+                {
+                    showBadge = true;
+                    badgeLabel = "?";
+                    badgePulsate = true;
+                }
+                else if (connectionCount > 0)
+                {
+                    showBadge = true;
+                    badgeLabel = connectionCount.toString();
+                }
+
+                this._showConnectionPrompt = showConnectionPrompt;
+                tab.showSpinner = showSpinner;
+                tab.showBadge = showBadge;
+                tab.badgeLabel = badgeLabel;
+                tab.badgePulsate = badgePulsate;
+            },
+
+            _onWizardDocumentsChanged: function()
+            {
+                var tab = this._findTabWithId("step3");
+                if (!tab)
+                    return;
+
+                var showDocumentPrompt = false;
+                var showBadge = false;
+                var badgeLabel = "";
+                var badgeFlashOnLabelChange = false;
+
+                var documentCount = this.documents.length;
+
+                var noDocumentsYet = (documentCount === 0);
+                if (noDocumentsYet)
+                {
+                    showDocumentPrompt = true;
+                }
+                else
+                {
+                    showBadge = true;
+                    badgeFlashOnLabelChange = true;
+                    badgeLabel = documentCount.toString();
+                }
+
+                this._showDocumentPrompt = showDocumentPrompt;
+                tab.showBadge = showBadge;
+                tab.badgeLabel = badgeLabel;
+                tab.badgeFlashOnLabelChange = badgeFlashOnLabelChange;
+            },
+
+            _findTabWithId: function(id)
+            {
+                return this.$.tabBar.findTabWithId(id);
             },
 
             _onCancelButtonClicked: function()
             {
-                this.fire('wizard-canceled');
+                this.fire('wizard-canceled-command');
             },
 
-            _onAddConnection: function()
+            _onWizardAddConnectionCommand: function()
             {
                 this._selectedPanelName = "step1";
             },
 
-            _onViewConnections: function()
+            _onWizardViewConnectionsCommand: function()
             {
                 this._selectedPanelName = "step2";
             },
@@ -438,7 +588,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     this.$.modalInteractionDialog.close();
             },
 
-            _onSubmitInteractionResponse: function(event)
+            _onSubmitInteractionResponseCommand: function(event)
             {
                 var interactionRequest = this._interactionRequest;
                 var interactionResponse = this._interactionResponse;
@@ -466,12 +616,12 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             _onBackButtonTapped: function(event)
             {
-                this.$.tabs.selectPrevious();
+                this.$.tabBar.selectPrevious();
             },
 
             _onNextButtonTapped: function(event)
             {
-                this.$.tabs.selectNext();
+                this.$.tabBar.selectNext();
             },
 
 //            _onSubmitInteractionResponseNew: function(event)
@@ -523,11 +673,9 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 return this.poseNextPendingInteractionRequest();
             },
 
-            _onCommitLocal: function(event)
+            _onCreateConnectionCommand: function(event)
             {
-                var origin = event.path[0];
-                if (origin.id === "createConnectionDialog")
-                    this._selectedPanelName = "step2";
+                this._selectedPanelName = "step2";
             },
 
         });
