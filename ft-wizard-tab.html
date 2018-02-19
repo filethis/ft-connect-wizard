@@ -109,20 +109,20 @@ An element that implements an arrow-shaped tab for a tab bar.
             <div
                 class="layout vertical"
             >
-                <!-- Title -->
+                <!-- Heading -->
                 <iron-label
-                    id="title"
+                    id="heading"
                     style="font-family:Arial; font-size:12pt;  "
                 >
-                    [[title]]
+                    [[heading]]
                 </iron-label>
 
-                <!-- Subtitle -->
+                <!-- Subheading -->
                 <iron-label
-                    id="subtitle"
+                    id="subheading"
                     style="font-family:Arial; font-size:9pt; margin-top:1px; "
                 >
-                    [[subtitle]]
+                    [[subheading]]
                 </iron-label>
             </div>
         </div>
@@ -179,12 +179,12 @@ An element that implements an arrow-shaped tab for a tab bar.
                     type: String
                 },
 
-                title:
+                heading:
                 {
                     type: String
                 },
 
-                subtitle:
+                subheading:
                 {
                     type: String
                 },
@@ -305,8 +305,8 @@ An element that implements an arrow-shaped tab for a tab bar.
                 if (to)  // selected
                 {
                     this._bodyFill = "#6B81AC";
-                    this.$.title.style.color = "white";
-                    this.$.subtitle.style.color = "white";
+                    this.$.heading.style.color = "white";
+                    this.$.subheading.style.color = "white";
 
                     // Set badge styles
 //                    this.$.badge.updateStyles({
@@ -322,8 +322,8 @@ An element that implements an arrow-shaped tab for a tab bar.
                 else  // unselected
                 {
                     this._bodyFill = "#DDDDDD";
-                    this.$.title.style.color = "black";
-                    this.$.subtitle.style.color = "black";
+                    this.$.heading.style.color = "black";
+                    this.$.subheading.style.color = "black";
 
                     // Set badge styles
 //                    this.$.badge.updateStyles({

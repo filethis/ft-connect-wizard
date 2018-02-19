@@ -31,8 +31,8 @@ A drop-in HTML 5 element that quickly, securely, and flexibly integrates your ap
             <ft-connection-panel-settings-editor
                     slot="config"
                     style="height:100%; padding:20px; "
-                    show-title="{{showTitle}}"
-                    title="{{title}}"
+                    show-heading="{{showHeading}}"
+                    heading="{{heading}}"
                     show-delete-button="{{showDeleteButton}}"
                     show-details-panel="{{showDetailsPanel}}">
             </ft-connection-panel-settings-editor>
@@ -42,7 +42,8 @@ A drop-in HTML 5 element that quickly, securely, and flexibly integrates your ap
                     id="component"
                     slot="instance"
                     style="width:100%; height:100%; "
-                    fake="true"
+                    fake-data="true"
+                    fake-sources="true"
                     debug="true"
                     code="{{code}}">
             </ft-connect-wizard>
