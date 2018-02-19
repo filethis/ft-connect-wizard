@@ -1,0 +1,695 @@
+<!--
+Copyright 2017 FileThis, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+
+
+<link rel="import" href="../ft-confirmation-dialog/ft-confirmation-dialog.html">
+<link rel="import" href="../ft-connect-behavior/ft-connect-behavior.html">
+<link rel="import" href="../ft-connection-panel/ft-connection-panel.html">
+<link rel="import" href="../ft-document-panel/ft-document-panel.html">
+<link rel="import" href="../ft-labeled-icon-button/ft-labeled-icon-button.html">
+<link rel="import" href="../ft-source-panel/ft-source-panel.html">
+<link rel="import" href="../ft-source-panel/ft-source-identifier.html">
+<link rel="import" href="../ft-user-interaction-form/ft-user-interaction-form.html">
+<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="../iron-pages/iron-pages.html">
+<link rel="import" href="../paper-badge/paper-badge.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../paper-dialog/paper-dialog.html">
+<link rel="import" href="../paper-button/paper-button.html">
+<link rel="import" href="../paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../paper-tabs/paper-tabs.html">
+<link rel="import" href="../paper-tabs/paper-tab.html">
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="ft-prompt-with-button.html">
+<link rel="import" href="ft-wizard-finish-panel.html">
+<link rel="import" href="ft-wizard-tab.html">
+<link rel="import" href="ft-wizard-tab-bar.html">
+
+
+<!--
+`<ft-connect-wizard>`
+
+An element that implements a FileThis user workflow as a set of tabbed panels. As the user progresses, they navigate to the next tab in the sequence.
+
+@demo
+-->
+<dom-module id="ft-connect-wizard">
+
+    <template>
+
+        <style include="iron-flex iron-flex-alignment iron-positioning"></style>
+
+        <style>
+            :host {
+                display:block;
+                overflow:hidden;
+                @apply --layout-vertical;
+                @apply --ft-connect-wizard;
+            }
+        </style>
+
+        <style>
+
+            .slidein {
+                animation-duration: 1s;
+                animation-name: slidein;
+            }
+
+            @keyframes slidein {
+                from {
+                    margin-left:100%;
+                }
+
+                to {
+                    margin-left:0;
+                }
+            }
+
+            @keyframes slideout {
+                from {
+                    margin-left:0;
+                }
+
+                to {
+                    margin-left:100%;
+                }
+            }
+
+            .tabNormal
+            {
+                fill:#DDDDDD;
+            }
+
+            .tabSelected
+            {
+                fill:#6B81AC;
+            }
+
+        </style>
+
+        <!-- Header -->
+        <div
+            class="layout horizontal center"
+            style="height:50px; background-color:#DDD; padding-right:10px; "
+        >
+            <!-- Tabs -->
+            <ft-wizard-tab-bar
+                id="tabBar"
+                items="[[_tabs]]"
+                class="flex"
+                style="height:50px; "
+                selected="{{_selectedPanelName}}"
+            >
+            </ft-wizard-tab-bar>
+
+            <!-- Cancel button -->
+            <paper-button
+                raised
+                id="cancelButton"
+                hidden$="[[!showCancelButton]]"
+                style="width:90px; height:32px; font-size:14px; background-color:white; text-transform: none; border:1px solid #DDD; "
+                on-tap="_onCancelButtonClicked"
+            >
+                Cancel
+            </paper-button>
+
+            <!--&lt;!&ndash; Navigation buttons &ndash;&gt;-->
+            <!--<paper-icon-button-->
+                <!--on-tap="_onBackButtonTapped"-->
+                <!--icon="arrow-back"-->
+                <!--alt="back"-->
+                <!--title="back"-->
+            <!--&gt;-->
+            <!--</paper-icon-button>-->
+            <!--<paper-icon-button-->
+                <!--on-tap="_onNextButtonTapped"-->
+                <!--icon="arrow-forward"-->
+                <!--alt="next"-->
+                <!--title="next"-->
+            <!--&gt;-->
+            <!--</paper-icon-button>-->
+        </div>
+
+        <!-- Instructions -->
+        <!--<div class="layout horizontal center">-->
+
+            <!--<div-->
+                <!--class="flex"-->
+                <!--style="border:1px solid #DDD; margin:20px; background-color:white; "-->
+            <!--&gt;-->
+                <!--[[_instructions]]-->
+            <!--</div>-->
+
+        <!--</div>-->
+
+        <!-- Panels -->
+        <iron-pages
+            id="panels"
+            class="flex layout vertical"
+            style="border-top:1px solid #DDD; "
+            attr-for-selected="name"
+            selected="[[_selectedPanelName]]"
+        >
+
+            <!-- Source panel -->
+            <ft-source-panel
+                id="sourcesPanel"
+                name="step1"
+                class="flex"
+                show-heading="true"
+                heading="Click on a site to connect to it and fetch your documents"
+                selected-filter-id="{{selectedFilterId}}"
+                sources="[[sources]]"
+            >
+            </ft-source-panel>
+
+            <!-- Connection panel or prompt -->
+            <div
+                name="step2"
+                class="flex layout horizontal"
+            >
+                <!-- Connection panel -->
+                <ft-connection-panel
+                    id="connectionsPanel"
+                    hidden$="[[_showConnectionPrompt]]"
+                    class="flex"
+                    show-heading="true"
+                    heading="Connections to your sites"
+                    connections="[[connections]]"
+                    sources="[[sources]]"
+                >
+                </ft-connection-panel>
+
+                <!-- Prompt user to create connections -->
+                <div
+                    id="connectionsPrompt"
+                    hidden$="[[!_showConnectionPrompt]]"
+                    class="flex layout vertical center"
+                >
+                    <ft-prompt-with-button
+                        style="max-width:550px; margin:30px; "
+                        prompt="Once you've created connections to your sites, they will appear here."
+                        button-label="Connect Site"
+                        command="wizard-add-connection-command"
+                    >
+                    </ft-prompt-with-button>
+                </div>
+            </div>
+
+            <!-- Document panel or prompt -->
+            <div
+                name="step3"
+                class="flex layout horizontal"
+            >
+                <!-- Document panel -->
+                <ft-document-panel
+                    id="documentsPanel"
+                    hidden$="[[_showDocumentPrompt]]"
+                    class="flex"
+                    show-heading="true"
+                    heading="Documents fetched from your sites"
+                    show-grid-button="true"
+                    show-list-button="true"
+                    show-preview-button="false"
+                    show-upload-button="false"
+                    show-download-button="false"
+                    show-delete-button="false"
+                    show-document-count="false"
+                    documents="[[documents]]"
+                >
+                </ft-document-panel>
+
+                <!-- Prompt user to create connections -->
+                <div
+                    id="documentsPrompt"
+                    hidden$="[[!_showDocumentPrompt]]"
+                    class="flex layout vertical center"
+                >
+                    <ft-prompt-with-button
+                        style="max-width:550px; margin:30px; "
+                        prompt="Once you've created connections to your sites, and we have fetched documents from them, they will appear here."
+                        button-label="Connect Site"
+                        command="wizard-add-connection-command"
+                    >
+                    </ft-prompt-with-button>
+                </div>
+            </div>
+
+            <!-- Finish panel -->
+            <ft-wizard-finish-panel
+                id="finishPanel"
+                name="step4"
+                class="flex"
+                connections="[[connections]]"
+                documents="[[documents]]"
+            >
+            </ft-wizard-finish-panel>
+
+        </iron-pages>
+
+        <!-- User interaction dialog -->
+        <paper-dialog modal id="modalInteractionDialog"
+            style="width:450px;
+            padding-left:40px; padding-top:12px; padding-right:40px; padding-bottom:5px;"
+        >
+
+            <ft-user-interaction-form
+                id="interactionForm"
+                version="[[interactionVersion]]"
+                request="[[_interactionRequest]]"
+                response="{{_interactionResponse}}"
+                on-submit-response-command="_onSubmitInteractionResponseCommand"
+                on-button-clicked="_onInteractionFormButtonClicked"
+                style="background:white; border:1px solid #DDD;"
+            >
+            </ft-user-interaction-form>
+
+        </paper-dialog>
+
+        <!-- Uploader -->
+        <input
+            id="uploader"
+            hidden
+            type="file"
+            on-change="_onUploaderFilesChanged"
+            multiple="true"
+            accept="[[_uploadableFileTypes]]"
+        >
+
+        <!-- Downloader -->
+        <a
+            id="downloader"
+            hidden
+            href$="[[_downloadUrl]]"
+            download$="[[_downloadFilename]]"
+        >
+        </a>
+
+        <!-- Confirmation dialog -->
+        <ft-confirmation-dialog id="confirmationDialog"></ft-confirmation-dialog>
+
+        <!-- Source identifier dialog -->
+        <ft-source-identifier
+            id="sourceIdentifier"
+        >
+        </ft-source-identifier>
+
+    </template>
+
+    <script>
+        Polymer({
+
+            is: 'ft-connect-wizard',
+
+            /**
+             * Fired when the "Cancel" button is clicked.
+             *
+             * @event wizard-canceled-command
+             */
+
+            /**
+             * Fired when the "Done" button is clicked on the final page.
+             *
+             * @event wizard-done-command
+             */
+
+            behaviors: [
+                FileThis.ConnectBehavior,
+                FileThis.ErrorBehavior,
+                FileThis.HttpBehavior // TODO: Why do we have to include these when ConnectBehavior aready does?
+            ],
+
+            listeners:
+            {
+                'create-connection-command': '_onCreateConnectionCommand',
+                'wizard-add-connection-command': '_onWizardAddConnectionCommand',
+                'wizard-view-connections-command': '_onWizardViewConnectionsCommand',
+                'identify-source-command': '_onIdentifySourceCommand',
+            },
+
+            observers:[
+                '_onWizardConnectionsChanged(connections)',
+                '_onWizardConnectionsChanged(connections.splices)',
+                '_onWizardConnectionsChanged(connections.*)',
+                '_onWizardDocumentsChanged(documents)',
+                '_onWizardDocumentsChanged(documents.splices)',
+            ],
+
+            properties: {
+
+                /**
+                 * Show a "Cancel" button in the navigation bar.
+                 *
+                 * Note that you can provide the strings "true" and "false" as attribute values .
+                 *
+                 * @type {boolean}
+                 */
+                showCancelButton:
+                {
+                    type: Object,
+                    value: true
+                },
+
+                /** Name of the selected panel. One of: "sources", "connections", or "documents". */
+                _selectedPanelName:
+                {
+                    type: String,
+                    observer: "_onSelectedPanelNameChanged"
+                },
+
+                _instructions:
+                {
+                    type: String,
+                    notify: true,
+                    value: "Instructions"
+                },
+
+                _showConnectionPrompt:
+                {
+                    type: Boolean,
+                    value: false
+                },
+
+                _showDocumentPrompt:
+                {
+                    type: Boolean,
+                    value: false
+                },
+
+                _tabs:
+                {
+                    type: Array,
+                    value: [
+                        {
+                            "id": "step1",
+                            "name": "step1",
+                            "heading": "Step 1",
+                            "subheading": "Sites"
+                        },
+                        {
+                            "id": "step2",
+                            "name": "step2",
+                            "heading": "Step 2",
+                            "subheading": "Connections"
+                        },
+                        {
+                            "id": "step3",
+                            "name": "step3",
+                            "heading": "Step 3",
+                            "subheading": "Documents"
+                        },
+                        {
+                            "id": "step4",
+                            "name": "step4",
+                            "heading": "Step 4",
+                            "subheading": "Finish"
+                        }
+                    ]
+                }
+            },
+
+            ready: function()
+            {
+                // TODO: This is brittle. Get rid of it.
+                this.async(function()
+                {
+                    this._selectedPanelName = "step1";
+                });
+            },
+
+            _onIdentifySourceCommand: function(event)
+            {
+                var source = event.detail;
+                this.$.sourceIdentifier.pose(this.server, source);
+            },
+
+            _onAddConnectionButtonClicked: function()
+            {
+                this.fire('wizard-add-connection-command');
+            },
+
+            _onWizardConnectionsChanged: function()
+            {
+                var tab = this._findTabWithId("step2");
+                if (!tab)
+                    return;
+
+                var showConnectionPrompt = false;
+                var showSpinner = false;
+                var showBadge = false;
+                var badgeLabel = "";
+                var badgePulsate = false;
+
+                var connectionCount = this.connections.length;
+
+                var noConnectionsYet = (connectionCount === 0);
+                if (noConnectionsYet)
+                {
+                    showConnectionPrompt = true;
+                }
+                else if (this.someConnectionStillRunning())
+                {
+                    showSpinner = true;
+                }
+                else if (this.someConnectionHasPendingInteraction())
+                {
+                    showBadge = true;
+                    badgeLabel = "?";
+                    badgePulsate = true;
+                }
+                else if (connectionCount > 0)
+                {
+                    showBadge = true;
+                    badgeLabel = connectionCount.toString();
+                }
+
+                this._showConnectionPrompt = showConnectionPrompt;
+                tab.showSpinner = showSpinner;
+                tab.showBadge = showBadge;
+                tab.badgeLabel = badgeLabel;
+                tab.badgePulsate = badgePulsate;
+            },
+
+            _onWizardDocumentsChanged: function()
+            {
+                var tab = this._findTabWithId("step3");
+                if (!tab)
+                    return;
+
+                var showDocumentPrompt = false;
+                var showBadge = false;
+                var badgeLabel = "";
+                var badgeFlashOnLabelChange = false;
+
+                var documentCount = this.documents.length;
+
+                var noDocumentsYet = (documentCount === 0);
+                if (noDocumentsYet)
+                {
+                    showDocumentPrompt = true;
+                }
+                else
+                {
+                    showBadge = true;
+                    badgeFlashOnLabelChange = true;
+                    badgeLabel = documentCount.toString();
+                }
+
+                this._showDocumentPrompt = showDocumentPrompt;
+                tab.showBadge = showBadge;
+                tab.badgeLabel = badgeLabel;
+                tab.badgeFlashOnLabelChange = badgeFlashOnLabelChange;
+            },
+
+            _findTabWithId: function(id)
+            {
+                return this.$.tabBar.findTabWithId(id);
+            },
+
+            _onCancelButtonClicked: function()
+            {
+                this.fire('wizard-canceled-command');
+            },
+
+            _onWizardAddConnectionCommand: function()
+            {
+                this._selectedPanelName = "step1";
+            },
+
+            _onWizardViewConnectionsCommand: function()
+            {
+                this._selectedPanelName = "step2";
+            },
+
+            _onSelectedPanelNameChanged: function(to, from)
+            {
+                this._instructions = this._getInstructions();
+
+                // TODO: Temporary hack until we get the model updates working
+                if (to === "step4")
+                    this.$.finishPanel.wasShown();
+
+//                var panels = this.$.panels.children;
+//                var toPanel = panels[to];
+//                var fromPanel = panels[from];
+//
+//                if (!toPanel.classList.contains('slidein'))
+//                    toPanel.classList.add("slidein");
+//
+//                if (fromPanel !== undefined)
+//                    fromPanel.classList.remove("slidein");
+            },
+
+            _getInstructions: function()
+            {
+                switch (this._selectedPanelName)
+                {
+                    case "step1":
+                        return this._getInstructionsForSourcePanel();
+                    case "step2":
+                        return this._getInstructionsForConnectionPanel();
+                    case "step3":
+                        return this._getInstructionsForDocumentPanel();
+                    case "step4":
+                        return this._getInstructionsForFinishPanel();
+                    default:
+                        return "";
+                }
+            },
+
+            _getInstructionsForSourcePanel: function()
+            {
+                return "Click on a source to connect to it.";
+            },
+
+            _getInstructionsForConnectionPanel: function()
+            {
+                return "Observe that you have connections.";
+            },
+
+            _getInstructionsForDocumentPanel: function()
+            {
+                return "Observe that you have documents.";
+            },
+
+            _getInstructionsForFinishPanel: function()
+            {
+            },
+
+
+            // User action event handling --------------------------------------------------------------------------
+
+            _onInteractionFormButtonClicked: function(event)
+            {
+                var detail = event.detail;
+                if (detail.action === "defer")
+                    this.$.modalInteractionDialog.close();
+            },
+
+            _onSubmitInteractionResponseCommand: function(event)
+            {
+                var interactionRequest = this._interactionRequest;
+                var interactionResponse = this._interactionResponse;
+
+                var connectionId = interactionRequest.connectionId;
+                var interactionId = interactionRequest.id;
+                var url = this.server + this.apiPath +
+                    "/accounts/" + this.account.id +
+                    "/connections/" + connectionId +
+                    "/interactions/" + interactionId +
+                    "/response";
+                var options = this._buildHttpOptions();
+
+                return this.httpPut(url, interactionResponse, options)
+                    .then(function()
+                    {
+                        this.$.modalInteractionDialog.close();
+                    }.bind(this))
+                    .catch(function(reason)
+                    {
+                        this._handleError(reason);
+                        this.$.modalInteractionDialog.close();
+                    }.bind(this));
+            },
+
+            _onBackButtonTapped: function(event)
+            {
+                this.$.tabBar.selectPrevious();
+            },
+
+            _onNextButtonTapped: function(event)
+            {
+                this.$.tabBar.selectNext();
+            },
+
+//            _onSubmitInteractionResponseNew: function(event)
+//            {
+//                var interactionRequest = this._interactionRequest;
+//                var interactionResponse = this._interactionResponse;
+//
+//                var connectionId = interactionRequest.connectionId;
+//                var interactionId = interactionRequest.id;
+//                var url = this.server + this.apiPath +
+//                    "/accounts/" + this.account.id +
+//                    "/connections/" + connectionId +
+//                    "/interactions/" + interactionId +
+//                    "/response";
+//            var options = this._buildHttpOptions();
+//
+//                return this.httpPost(url, interactionResponse, options)
+//                    .then(function()
+//                    {
+//                        this.$.modalInteractionDialog.close();
+//                    }.bind(this))
+//                    .catch(function(reason)
+//                    {
+//                        this._handleError(reason);
+//                        this.$.modalInteractionDialog.close();
+//                    }.bind(this));
+//            },
+
+            poseNextPendingInteractionRequest: function()
+            {
+                if (this._interactionRequests.length === 0)
+                    return;
+
+                // If we already have a dialog posed
+                if (this.$.modalInteractionDialog.opened)
+                    return;
+
+                // Pose the first request
+                var interactionRequest = this._interactionRequests[0];
+                this._interactionRequest = interactionRequest;
+                this.$.modalInteractionDialog.open();
+                return interactionRequest;
+            },
+
+            _poseNextPendingInteractionRequest: function()
+            {
+                if (!this.poseUserInteractionsAutomatically)
+                    return;
+                return this.poseNextPendingInteractionRequest();
+            },
+
+            _onCreateConnectionCommand: function(event)
+            {
+                this._selectedPanelName = "step2";
+            },
+
+        });
+    </script>
+</dom-module>
+

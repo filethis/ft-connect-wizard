@@ -1,0 +1,80 @@
+<!-- ft-connect-wizard element demo -->
+
+<!-- Imports -->
+
+
+<!--
+
+A drop-in HTML 5 element that quickly, securely, and flexibly integrates your application with the FileThis API.
+
+@demo
+ -->
+<dom-module id="demo-fixture">
+
+    <template>
+
+        <style include="iron-flex iron-flex-alignment iron-positioning"></style>
+
+        <style>
+            :host {
+                display:block;
+                overflow:hidden;
+            }
+        </style>
+
+        <ft-element-demo
+                name="ft-connect-wizard"
+                code="[[code]]"
+                style="width:100%; height:100%; ">
+
+            <!-- Settings -->
+            <ft-connection-panel-settings-editor
+                    slot="config"
+                    style="height:100%; padding:20px; "
+                    show-heading="{{showHeading}}"
+                    heading="{{heading}}"
+                    show-delete-button="{{showDeleteButton}}"
+                    show-details-panel="{{showDetailsPanel}}">
+            </ft-connection-panel-settings-editor>
+
+            <!-- Panel -->
+            <ft-connect-wizard
+                    id="component"
+                    slot="instance"
+                    style="width:100%; height:100%; "
+                    fake-data="true"
+                    fake-sources="true"
+                    debug="true"
+                    code="{{code}}">
+            </ft-connect-wizard>
+
+        </ft-element-demo>
+
+    </template>
+
+    <script>
+
+        Polymer
+        ({
+            is: 'demo-fixture',
+
+            properties:
+            {
+                code:
+                {
+                    type: String,
+                    value: ""
+                }
+            },
+
+            ready: function()
+            {
+                this.$.component.getAllData();
+            }
+
+        });
+
+    </script>
+
+</dom-module>
+
