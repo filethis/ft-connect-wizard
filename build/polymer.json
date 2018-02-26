@@ -16,11 +16,7 @@
   "builds": [
     {
       "name": "dropin",
-      "bundle": {
-        "excludes": [
-          "/data/"
-        ]
-      },
+      "bundle": true,
       "js": {
         "minify": true,
         "compile": false
@@ -31,6 +27,10 @@
       "html": {
         "minify": true
       },
+      "excludes": [
+        "/data/"
+      ],
+      "stripComments": "true",
       "addPushManifest": true,
       "insertPrefetchLinks": true
     }
