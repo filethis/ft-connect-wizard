@@ -1,0 +1,7 @@
+{
+  "name": "ft-connect-wizard",
+  "short_name": "ft-connect-wizard",
+  "description": "A self-contained FileThis client workflow element.",
+  "start_url": "/",
+  "display": "standalone"
+}
