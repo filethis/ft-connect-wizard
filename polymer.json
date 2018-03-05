@@ -32,7 +32,7 @@
         "minify": true
       },
       "excludes": ["/data/"],
-      "stripComments": "true",
+      "addServiceWorker": true,
       "addPushManifest": true,
       "insertPrefetchLinks": true
     }
