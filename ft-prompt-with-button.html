@@ -37,27 +37,31 @@ limitations under the License.
                 @apply --layout-center;
                 @apply --ft-prompt-with-button;
             }
-        </style>
-
-        <!-- Instructions -->
-        <iron-label
-            class="flex"
-            style="font-family:Arial; font-size:14pt; "
-        >
-            [[prompt]]
-        </iron-label>
-
-        <!-- Add Connection button -->
-        <paper-button
-            raised
-            style="
+            .instructions {
+                font-family:Arial;
+                font-size:14pt;
+                @apply --ft-prompt-with-button-instructions;
+            }
+            .button {
                 height:32px;
                 font-size:14px;
                 background-color:white;
                 text-transform: none;
                 border:1px solid #DDD;
                 margin-left:16px;
-            "
+                @apply --ft-prompt-with-button-button;
+            }
+        </style>
+
+        <!-- Instructions -->
+        <iron-label class="instructions flex">
+            [[prompt]]
+        </iron-label>
+
+        <!-- Add Connection button -->
+        <paper-button
+            raised
+            class="button"
             on-tap="_onCommandButtonClicked"
         >
             [[buttonLabel]]
