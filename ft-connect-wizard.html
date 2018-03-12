@@ -54,22 +54,22 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
         <style>
             :host {
-                display:block;
-                overflow:hidden;
+                display: block;
+                overflow: hidden;
                 @apply --layout-vertical;
                 @apply --ft-connect-wizard;
             }
             .button {
-                width:90px;
-                height:32px;
-                font-size:14px;
-                background-color:white;
+                width: 90px;
+                height: 32px;
+                font-size: 14px;
+                background-color: white;
                 text-transform: none;
-                border:1px solid #DDD;
+                border: 1px solid #DDD;
                 @apply --ft-connect-wizard-button;
             }
             .panels {
-                border-top:1px solid #DDD;
+                border-top: 1px solid #DDD;
                 @apply --ft-connect-wizard-panels;
             }
             .connection-panel-or-prompt {
@@ -88,11 +88,11 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 @apply --ft-connect-wizard-finish-panel;
             }
             .user-interaction-dialog {
-                width:450px;
-                padding-left:40px;
-                padding-top:12px;
-                padding-right:40px;
-                padding-bottom:5px;
+                width: 450px;
+                padding-left: 40px;
+                padding-top: 12px;
+                padding-right: 40px;
+                padding-bottom: 5px;
                 @apply --ft-connect-wizard-user-interaction-dialog;
             }
             .tabNormal
@@ -108,7 +108,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
         <!-- Header -->
         <div
             class="layout horizontal center"
-            style="height:50px; background-color:#DDD; padding-right:10px; "
+            style="height:50px; background-color: #DDD; padding-right: 10px; "
         >
             <!-- Tabs -->
             <ft-wizard-tab-bar
@@ -153,7 +153,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             <!--<div-->
                 <!--class="flex"-->
-                <!--style="border:1px solid #DDD; margin:20px; background-color:white; "-->
+                <!--style="border:1px solid #DDD; margin:20px; background-color: white; "-->
             <!--&gt;-->
                 <!--[[_instructions]]-->
             <!--</div>-->
@@ -276,7 +276,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 response="{{_interactionResponse}}"
                 on-submit-response-command="_onSubmitInteractionResponseCommand"
                 on-button-clicked="_onInteractionFormButtonClicked"
-                style="background:white; border:1px solid #DDD;"
+                style="background:white; border: 1px solid #DDD;"
             >
             </ft-user-interaction-form>
 

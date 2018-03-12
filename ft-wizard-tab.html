@@ -37,8 +37,8 @@ An element that implements an arrow-shaped tab for a tab bar.
 
         <style>
             :host {
-                display:block;
-                overflow:hidden;
+                display: block;
+                overflow: hidden;
                 position:relative;
                 cursor:pointer;
                 @apply --ft-wizard-tab;
@@ -62,7 +62,7 @@ An element that implements an arrow-shaped tab for a tab bar.
         <!-- Background body -->
         <svg
             viewBox="0 0 100 100"
-            style="position:absolute; z-index:1; width:100%; height:100%; "
+            style="position:absolute; z-index:1; width: 100%; height: 100%; "
             preserveAspectRatio="none"
             on-tap="_onTabBodyTapped"
         >
@@ -79,7 +79,7 @@ An element that implements an arrow-shaped tab for a tab bar.
             style="
                 position:absolute;
                 z-index:2;
-                width:100%; height:100%;
+                width: 100%; height: 100%;
                 "
             preserveAspectRatio="none"
             on-click="_onTabTailClicked"
@@ -102,7 +102,7 @@ An element that implements an arrow-shaped tab for a tab bar.
         <!-- Label -->
         <div
             id="mainDiv"
-            style="position:absolute; z-index:3; left:0px; right:20px; height:100%; "
+            style="position:absolute; z-index:3; left:0px; right:20px; height: 100%; "
             class="layout vertical center center-justified"
             on-tap="_onTabBodyTapped"
         >
@@ -112,7 +112,7 @@ An element that implements an arrow-shaped tab for a tab bar.
                 <!-- Heading -->
                 <iron-label
                     id="heading"
-                    style="font-family:Arial; font-size:12pt;  "
+                    style="font-family:Arial; font-size: 12pt;  "
                 >
                     [[heading]]
                 </iron-label>
@@ -120,7 +120,7 @@ An element that implements an arrow-shaped tab for a tab bar.
                 <!-- Subheading -->
                 <iron-label
                     id="subheading"
-                    style="font-family:Arial; font-size:9pt; margin-top:1px; "
+                    style="font-family:Arial; font-size: 9pt; margin-top: 1px; "
                 >
                     [[subheading]]
                 </iron-label>
@@ -132,7 +132,7 @@ An element that implements an arrow-shaped tab for a tab bar.
             id="spinner"
             active="[[showSpinner]]"
             hidden$="[[!showSpinner]]"
-            style="position:absolute; z-index:4; width:17px; height:17px; right:14px; top:16px; --paper-spinner-stroke-width:2px; "
+            style="position:absolute; z-index:4; width: 17px; height: 17px; right:14px; top:16px; --paper-spinner-stroke-width:2px; "
             on-tap="_onTabBodyTapped"
         >
         </paper-spinner-lite>
@@ -142,7 +142,7 @@ An element that implements an arrow-shaped tab for a tab bar.
             id="badge"
             hidden$="[[!showBadge]]"
             viewBox="0 0 100 100"
-            style="position:absolute; z-index:5; width:25px; height:25px; right:13px; top:13px; "
+            style="position:absolute; z-index:5; width: 25px; height: 25px; right:13px; top:13px; "
             preserveAspectRatio="none"
             on-tap="_onTabBodyTapped"
         >
@@ -153,7 +153,7 @@ An element that implements an arrow-shaped tab for a tab bar.
         <iron-label
             id="badgeLabel"
             hidden$="[[!showBadge]]"
-            style="position:absolute; z-index:6; font-family:Arial; font-size:9pt; width:25px; height:25px; right:13px; top:13px; text-align:center; margin-top:6px; "
+            style="position:absolute; z-index:6; font-family: Arial, Helvetica, sans-serif; font-size: 9pt; width: 25px; height: 25px; right:13px; top:13px; text-align:center; margin-top: 6px; "
             on-tap="_onTabBodyTapped"
         >
             [[badgeLabel]]
