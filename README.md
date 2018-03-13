@@ -4,4 +4,4 @@
 
 -----------------------------------------------------------
 
-An element that implements a FileThis workflow as a wizard UI. As the user progresses, a new page slides into view in the fixed-size area.
+An element that implements a FileThis workflow as a wizard UI.
