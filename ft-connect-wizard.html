@@ -59,35 +59,35 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 @apply --layout-vertical;
                 @apply --ft-connect-wizard;
             }
-            .button {
+            #cancelButton {
                 width: 90px;
                 height: 32px;
                 font-size: 14px;
                 background-color: white;
                 text-transform: none;
                 border: 1px solid #DDD;
-                @apply --ft-connect-wizard-button;
+                @apply --ft-connect-wizard-cancel-button;
             }
-            .panels {
+            #panels {
                 border-top: 1px solid #DDD;
                 @apply --ft-connect-wizard-panels;
             }
-            .connection-panel-or-prompt {
+            #connectionPanelOrPrompt {
                 @apply --ft-connect-wizard-connection-panel-or-prompt;
             }
-            .connection-prompt {
+            #connectionPrompt {
                 @apply --ft-connect-wizard-connection-prompt;
             }
-            .document-panel-or-prompt {
+            #documentPanelOrPrompt {
                 @apply --ft-connect-wizard-document-panel-or-prompt;
             }
-            .document-prompt {
+            #documentPrompt {
                 @apply --ft-connect-wizard-document-prompt;
             }
-            .finish-panel {
+            #finishPanel {
                 @apply --ft-connect-wizard-finish-panel;
             }
-            .user-interaction-dialog {
+            #modalInteractionDialog {
                 width: 450px;
                 padding-left: 40px;
                 padding-top: 12px;
@@ -98,10 +98,12 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             .tabNormal
             {
                 fill:#DDDDDD;
+                @apply --ft-connect-wizard-tab-normal;
             }
             .tabSelected
             {
                 fill:#6B81AC;
+                @apply --ft-connect-wizard-tab-selected;
             }
         </style>
 
@@ -124,7 +126,6 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             <paper-button
                 raised
                 id="cancelButton"
-                class="button"
                 hidden$="[[!showCancelButton]]"
                 on-tap="_onCancelButtonClicked"
             >
@@ -163,7 +164,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
         <!-- Panels -->
         <iron-pages
             id="panels"
-            class="panels flex layout vertical"
+            class="flex layout vertical"
             attr-for-selected="name"
             selected="[[_selectedPanelName]]"
         >
@@ -182,7 +183,8 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             <!-- Connection panel or prompt -->
             <div
                 name="step2"
-                class="connection-panel-or-prompt flex layout horizontal"
+                id="connectionPanelOrPrompt"
+                class="flex layout horizontal"
             >
                 <!-- Connection panel -->
                 <ft-connection-panel
@@ -200,7 +202,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 <div
                     id="connectionPrompt"
                     hidden$="[[!_showConnectionPrompt]]"
-                    class="connection-prompt flex layout vertical center"
+                    class="flex layout vertical center"
                 >
                     <ft-prompt-with-button
                         style="max-width:550px; margin:30px; "
@@ -214,8 +216,9 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             <!-- Document panel or prompt -->
             <div
+                id="documentPanelOrPrompt"
                 name="step3"
-                class="document-panel-or-prompt flex layout horizontal"
+                class="flex layout horizontal"
             >
                 <!-- Document panel -->
                 <ft-document-panel
@@ -239,7 +242,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 <div
                     id="documentPrompt"
                     hidden$="[[!_showDocumentPrompt]]"
-                    class="document-prompt flex layout vertical center"
+                    class="flex layout vertical center"
                 >
                     <ft-prompt-with-button
                         style="max-width:550px; margin:30px; "
@@ -255,7 +258,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             <ft-wizard-finish-panel
                 id="finishPanel"
                 name="step4"
-                class="finish-panel flex"
+                class="flex"
                 connections="[[connections]]"
                 documents="[[documents]]"
             >
@@ -267,7 +270,6 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
         <paper-dialog
             modal
             id="modalInteractionDialog"
-            class="user-interaction-dialog"
         >
             <ft-user-interaction-form
                 id="interactionForm"
@@ -683,7 +685,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             },
 
             pageCodeDropIn: "<!-- Put this at the top of your page -->\n" +
-            "<link rel=\"import\" href=\"https://connect.filethis.com/ft-connect-wizard/latest/dropin/ft-connect-wizard.html\">\n" +
+            "<link rel=\"import\" href=\"https://${PUBLICATION_DOMAIN}/ft-connect-wizard/latest/dropin/ft-connect-wizard.html\">\n" +
             "{{SETTINGS_IMPORTS}}\n" +
             "<!-- Put this into the content of your page -->\n" +
             "<{{NAME}}\n" +

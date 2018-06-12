@@ -42,7 +42,7 @@ This element displays a finish of where the user stands in the process of comple
                 @apply --layout-center;
                 @apply --ft-wizard-finish-panel;
             }
-            .button {
+            #doneButton {
                 width: 90px; height: 32px;
                 font-size: 14px;
                 background-color: white;
@@ -107,9 +107,8 @@ This element displays a finish of where the user stands in the process of comple
 
                 <!-- Done button -->
                 <paper-button
-                    raised
                     id="doneButton"
-                    class="button"
+                    raised
                     hidden$="[[!showDoneButton]]"
                     on-tap="_onDoneButtonClicked"
                 >
