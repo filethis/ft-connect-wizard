@@ -3,6 +3,7 @@
 <!-- Imports -->
 <link rel="import" href="../../ft-element-demo/ft-element-demo.html">
 <link rel="import" href="../../ft-connect-wizard/ft-connect-wizard.html">
+<link rel="import" href="../../ft-connection-list-item/ft-connection-list-item-settings.html">
 <link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../../polymer/polymer.html">
 
@@ -26,18 +27,25 @@ A drop-in HTML 5 element that quickly, securely, and flexibly integrates your ap
             }
         </style>
 
-        <ft-element-demo
-                name="ft-connect-wizard"
-                style="width:100%; height: 100%; ">
+        <!-- Settings -->
+        <ft-connection-list-item-settings
+            ft-connection-list-item-allow-manual-fetch=true
+        >
+        </ft-connection-list-item-settings>
 
+        <ft-element-demo
+            name="ft-connect-wizard"
+            style="width:100%; height: 100%; "
+        >
             <!-- Panel -->
             <ft-connect-wizard
-                    id="wizard"
-                    slot="instance"
-                    style="width:100%; height: 100%; "
-                    fake-data="true"
-                    fake-sources="true"
-                    debug="true">
+                id="wizard"
+                slot="instance"
+                style="width:100%; height: 100%; "
+                fake-data="true"
+                fake-sources="true"
+                debug="true"
+            >
             </ft-connect-wizard>
 
         </ft-element-demo>

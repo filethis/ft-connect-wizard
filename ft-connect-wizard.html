@@ -18,10 +18,16 @@ limitations under the License.
 <link rel="import" href="../ft-confirmation-dialog/ft-confirmation-dialog.html">
 <link rel="import" href="../ft-connect-behavior/ft-connect-behavior.html">
 <link rel="import" href="../ft-connection-panel/ft-connection-panel.html">
+<link rel="import" href="../ft-connection-panel/ft-connection-panel-settings-behavior.html">
+<link rel="import" href="../ft-connection-list-item/ft-connection-list-item-settings-behavior.html">
+<link rel="import" href="../ft-connection-list-item/ft-connection-list-item-settings.html">
 <link rel="import" href="../ft-document-panel/ft-document-panel.html">
+<link rel="import" href="../ft-document-panel/ft-document-panel-settings-behavior.html">
 <link rel="import" href="../ft-labeled-icon-button/ft-labeled-icon-button.html">
+<link rel="import" href="../ft-source-grid-item/ft-source-grid-item-settings-behavior.html">
 <link rel="import" href="../ft-source-panel/ft-source-panel.html">
 <link rel="import" href="../ft-source-panel/ft-source-identifier.html">
+<link rel="import" href="../ft-source-panel/ft-source-panel-settings-behavior.html">
 <link rel="import" href="../ft-user-interaction-form/ft-user-interaction-form.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
 <link rel="import" href="../iron-pages/iron-pages.html">
@@ -173,10 +179,15 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 id="sourcesPanel"
                 name="step1"
                 class="flex"
-                show-heading="true"
-                heading="Click on a site to connect to it and fetch your documents"
                 selected-filter-id="{{selectedFilterId}}"
                 sources="[[sources]]"
+
+                ft-source-panel-show-filters="{{ftSourcePanelShowFilters}}"
+                ft-source-panel-heading="{{ftSourcePanelHeading}}"
+                ft-source-panel-show-heading="{{ftSourcePanelShowHeading}}"
+                ft-source-panel-show-search-field="{{ftSourcePanelShowSearchField}}"
+
+                ft-source-grid-item-show-identify-button="{{ftSourceGridItemShowIdentifyButton}}"
             >
             </ft-source-panel>
 
@@ -191,10 +202,14 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     id="connectionsPanel"
                     hidden$="[[_showConnectionPrompt]]"
                     class="flex"
-                    show-heading="true"
-                    heading="Connections to your sites"
                     connections="[[connections]]"
                     sources="[[sources]]"
+
+                    ft-connection-panel-show-heading="{{ftConnectionPanelShowHeading}}"
+                    ft-connection-panel-heading="{{ftConnectionPanelHeading}}"
+                    ft-connection-panel-show-delete-button="{{ftConnectionPanelShowDeleteButton}}"
+
+                    ft-connection-list-item-allow-manual-fetch="{{ftConnectionListItemAllowManualFetch}}"
                 >
                 </ft-connection-panel>
 
@@ -225,16 +240,18 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     id="documentsPanel"
                     hidden$="[[_showDocumentPrompt]]"
                     class="flex"
-                    show-heading="true"
-                    heading="Documents fetched from your sites"
-                    show-grid-button="true"
-                    show-list-button="true"
-                    show-preview-button="false"
-                    show-upload-button="false"
-                    show-download-button="false"
-                    show-delete-button="false"
-                    show-document-count="false"
+
                     documents="[[documents]]"
+
+                    ft-document-panel-show-heading="{{ftDocumentPanelShowHeading}}"
+                    ft-document-panel-heading="{{ftDocumentPanelHeading}}"
+                    ft-document-panel-show-grid-button="{{ftDocumentPanelShowGridButton}}"
+                    ft-document-panel-show-list-button="{{ftDocumentPanelShowListButton}}"
+                    ft-document-panel-show-preview-button="{{ftDocumentPanelShowPreviewButton}}"
+                    ft-document-panel-show-upload-button="{{ftDocumentPanelShowUploadButton}}"
+                    ft-document-panel-show-download-button="{{ftDocumentPanelShowDownloadButton}}"
+                    ft-document-panel-show-delete-button="{{ftDocumentPanelShowDeleteButton}}"
+                    ft-document-panel-show-document-count="{{ftDocumentPanelShowDocumentCount}}"
                 >
                 </ft-document-panel>
 
@@ -332,9 +349,14 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
              */
 
             behaviors: [
-                FileThis.ConnectBehavior,
                 FileThis.ErrorBehavior,
-                FileThis.HttpBehavior // TODO: Why do we have to include these when ConnectBehavior aready does?
+                FileThis.HttpBehavior, // TODO: Why do we have to include these when ConnectBehavior aready does?
+                FileThis.ConnectBehavior,
+                FileThis.ConnectionPanelSettingsBehavior,
+                FileThis.ConnectionListItemSettingsBehavior,
+                FileThis.DocumentPanelSettingsBehavior,
+                FileThis.SourceGridItemSettingsBehavior,
+                FileThis.SourcePanelSettingsBehavior,
             ],
 
             listeners:
@@ -686,7 +708,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             pageCodeDropIn: "<!-- Put this at the top of your page -->\n" +
             "<link rel=\"import\" href=\"https://${PUBLICATION_DOMAIN}/ft-connect-wizard/latest/dropin/ft-connect-wizard.html\">\n" +
-            "{{SETTINGS_IMPORTS}}\n" +
+            "\n" +
             "<!-- Put this into the content of your page -->\n" +
             "<{{NAME}}\n" +
             "    style=\"height:100%\"\n" +
@@ -700,7 +722,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             pageCodeCustom: "<!-- Put this at the top of your page -->\n" +
             "<link rel=\"import\" href=\"../bower_components/{{NAME}}/{{NAME}}.html\">\n" +
-            "{{SETTINGS_IMPORTS}}\n" +
+            "\n" +
             "<!-- Put this into the content of your page -->\n" +
             "<{{NAME}}\n" +
             "    style=\"height:100%\"\n" +
