@@ -706,33 +706,35 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 this._selectedPanelName = "step2";
             },
 
-            pageCodeDropIn: "<!-- Put this at the top of your page -->\n" +
-            "<link rel=\"import\" href=\"https://${PUBLICATION_DOMAIN}/ft-connect-wizard/latest/dropin/ft-connect-wizard.html\">\n" +
-            "\n" +
-            "<!-- Put this into the content of your page -->\n" +
-            "<{{NAME}}\n" +
-            "    style=\"height:100%\"\n" +
-            "    user-account-id=\"{{ACCOUNT_ID}}\"\n" +
-            "    token=\"{{TOKEN}}\"\n" +
-            "    live=\"true\"\n" +
-            "    debug=\"true\"\n" +
-            "    fake-sources=\"true\">\n" +
-            "</{{NAME}}>\n" +
-            "{{SETTINGS_INITIALIZERS}}\n",
+            pageCodeDropIn:
+                "<!-- Put this at the top of your page -->\n" +
+                "<link rel=\"import\" href=\"https://connect.filethis.com/ft-connect-wizard/latest/dropin/ft-connect-wizard.html\">\n" +
+                "\n" +
+                "<!-- Put this into the content of your page -->\n" +
+                "{{SETTINGS_ELEMENTS}}" +
+                "<{{NAME}}\n" +
+                "    style=\"height:100%\"\n" +
+                "    user-account-id=\"{{ACCOUNT_ID}}\"\n" +
+                "    token=\"{{TOKEN}}\"\n" +
+                "    live=\"true\"\n" +
+                "    debug=\"true\"\n" +
+                "    fake-sources=\"true\">\n" +
+                "</{{NAME}}>\n",
 
-            pageCodeCustom: "<!-- Put this at the top of your page -->\n" +
-            "<link rel=\"import\" href=\"../bower_components/{{NAME}}/{{NAME}}.html\">\n" +
-            "\n" +
-            "<!-- Put this into the content of your page -->\n" +
-            "<{{NAME}}\n" +
-            "    style=\"height:100%\"\n" +
-            "    user-account-id=\"{{ACCOUNT_ID}}\"\n" +
-            "    token=\"{{TOKEN}}\"\n" +
-            "    live=\"true\"\n" +
-            "    debug=\"true\"\n" +
-            "    fake-sources=\"true\">\n" +
-            "</{{NAME}}>\n" +
-            "{{SETTINGS_INITIALIZERS}}\n",
+            pageCodeCustom:
+                "<!-- Put this at the top of your page -->\n" +
+                "<link rel=\"import\" href=\"../bower_components/{{NAME}}/{{NAME}}.html\">\n" +
+                "\n" +
+                "<!-- Put this into the content of your page -->\n" +
+                "{{SETTINGS_ELEMENTS}}" +
+                "<{{NAME}}\n" +
+                "    style=\"height:100%\"\n" +
+                "    user-account-id=\"{{ACCOUNT_ID}}\"\n" +
+                "    token=\"{{TOKEN}}\"\n" +
+                "    live=\"true\"\n" +
+                "    debug=\"true\"\n" +
+                "    fake-sources=\"true\">\n" +
+                "</{{NAME}}>\n",
 
             getPageCodeTemplate: function(isDropIn)
             {
