@@ -15,6 +15,32 @@ limitations under the License.
 -->
 
 
+<!--<link rel="import" href="bower_components/ft-confirmation-dialog/ft-confirmation-dialog.html">-->
+<!--<link rel="import" href="bower_components/ft-connect-behavior/ft-connect-behavior.html">-->
+<!--<link rel="import" href="bower_components/ft-connection-panel/ft-connection-panel.html">-->
+<!--<link rel="import" href="bower_components/ft-connection-panel/ft-connection-panel-settings-behavior.html">-->
+<!--<link rel="import" href="bower_components/ft-connection-list-item/ft-connection-list-item-settings-behavior.html">-->
+<!--<link rel="import" href="bower_components/ft-connection-list-item/ft-connection-list-item-settings.html">-->
+<!--<link rel="import" href="bower_components/ft-document-panel/ft-document-panel.html">-->
+<!--<link rel="import" href="bower_components/ft-document-panel/ft-document-panel-settings-behavior.html">-->
+<!--<link rel="import" href="bower_components/ft-labeled-icon-button/ft-labeled-icon-button.html">-->
+<!--<link rel="import" href="bower_components/ft-source-grid-item/ft-source-grid-item-settings-behavior.html">-->
+<!--<link rel="import" href="bower_components/ft-source-panel/ft-source-panel.html">-->
+<!--<link rel="import" href="bower_components/ft-source-panel/ft-source-identifier.html">-->
+<!--<link rel="import" href="bower_components/ft-source-panel/ft-source-panel-settings-behavior.html">-->
+<!--<link rel="import" href="bower_components/ft-user-interaction-form/ft-user-interaction-form.html">-->
+<!--<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">-->
+<!--<link rel="import" href="bower_components/iron-pages/iron-pages.html">-->
+<!--<link rel="import" href="bower_components/paper-badge/paper-badge.html">-->
+<!--<link rel="import" href="bower_components/paper-checkbox/paper-checkbox.html">-->
+<!--<link rel="import" href="bower_components/paper-dialog/paper-dialog.html">-->
+<!--<link rel="import" href="bower_components/paper-button/paper-button.html">-->
+<!--<link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">-->
+<!--<link rel="import" href="bower_components/paper-tabs/paper-tabs.html">-->
+<!--<link rel="import" href="bower_components/paper-tabs/paper-tab.html">-->
+<!--<link rel="import" href="bower_components/polymer/polymer.html">-->
+<!--<link rel="import" href="bower_components/app-storage/app-localstorage/app-localstorage-document.html">">-->
+
 <link rel="import" href="../ft-confirmation-dialog/ft-confirmation-dialog.html">
 <link rel="import" href="../ft-connect-behavior/ft-connect-behavior.html">
 <link rel="import" href="../ft-connection-panel/ft-connection-panel.html">
@@ -39,10 +65,13 @@ limitations under the License.
 <link rel="import" href="../paper-tabs/paper-tabs.html">
 <link rel="import" href="../paper-tabs/paper-tab.html">
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../app-storage/app-localstorage/app-localstorage-document.html">
+
 <link rel="import" href="ft-prompt-with-button.html">
 <link rel="import" href="ft-wizard-finish-panel.html">
 <link rel="import" href="ft-wizard-tab.html">
 <link rel="import" href="ft-wizard-tab-bar.html">
+<link rel="import" href="ft-connect-wizard-settings-behavior.html">
 
 
 <!--
@@ -113,6 +142,9 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             }
         </style>
 
+        <app-localstorage-document key="ftConnectWizardShowDocumentsPanel" data="{{ftConnectWizardShowDocumentsPanel}}">
+        </app-localstorage-document>
+
         <!-- Header -->
         <div
             class="layout horizontal center"
@@ -177,7 +209,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             <!-- Source panel -->
             <ft-source-panel
                 id="sourcesPanel"
-                name="step1"
+                name="stepSources"
                 class="flex"
                 selected-filter-id="{{selectedFilterId}}"
                 sources="[[sources]]"
@@ -193,7 +225,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             <!-- Connection panel or prompt -->
             <div
-                name="step2"
+                name="stepConnections"
                 id="connectionPanelOrPrompt"
                 class="flex layout horizontal"
             >
@@ -232,7 +264,8 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             <!-- Document panel or prompt -->
             <div
                 id="documentPanelOrPrompt"
-                name="step3"
+                hidden$="[[!showDocumentsPanel]]"
+                name="stepDocuments"
                 class="flex layout horizontal"
             >
                 <!-- Document panel -->
@@ -274,7 +307,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
             <!-- Finish panel -->
             <ft-wizard-finish-panel
                 id="finishPanel"
-                name="step4"
+                name="stepFinish"
                 class="flex"
                 connections="[[connections]]"
                 documents="[[documents]]"
@@ -353,6 +386,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 FileThis.HttpBehavior, // TODO: Why do we have to include these when ConnectBehavior aready does?
                 FileThis.ConnectBehavior,
                 FileThis.ConnectionPanelSettingsBehavior,
+                FileThis.ConnectWizardSettingsBehavior,
                 FileThis.ConnectionListItemSettingsBehavior,
                 FileThis.DocumentPanelSettingsBehavior,
                 FileThis.SourceGridItemSettingsBehavior,
@@ -390,6 +424,20 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     value: true
                 },
 
+                /**
+                 * Show the "Documents" panel, or not.
+                 *
+                 * Note that you can provide the strings "true" and "false" as attribute values .
+                 *
+                 * @type {boolean}
+                 */
+                showDocumentsPanel:
+                {
+                    type: Object,
+                    value: true,
+                    observer: "_onShowDocumentsPanelChanged"
+                },
+
                 /** Name of the selected panel. One of: "sources", "connections", or "documents". */
                 _selectedPanelName:
                 {
@@ -417,44 +465,114 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 },
 
                 _tabs:
-                {
-                    type: Array,
-                    value: [
-                        {
-                            "id": "step1",
-                            "name": "step1",
-                            "heading": "Step 1",
-                            "subheading": "Sites"
-                        },
-                        {
-                            "id": "step2",
-                            "name": "step2",
-                            "heading": "Step 2",
-                            "subheading": "Connections"
-                        },
-                        {
-                            "id": "step3",
-                            "name": "step3",
-                            "heading": "Step 3",
-                            "subheading": "Documents"
-                        },
-                        {
-                            "id": "step4",
-                            "name": "step4",
-                            "heading": "Step 4",
-                            "subheading": "Finish"
-                        }
-                    ]
-                }
+                    {
+                        type: Array,
+                        notify: true,
+                    },
+
+                _tabsWithDocuments:
+                    {
+                        type: Array,
+                        value: [
+                            {
+                                "id": "stepSources",
+                                "name": "stepSources",
+                                "heading": "Step 1",
+                                "subheading": "Sites"
+                            },
+                            {
+                                "id": "stepConnections",
+                                "name": "stepConnections",
+                                "heading": "Step 2",
+                                "subheading": "Connections"
+                            },
+                            {
+                                "id": "stepDocuments",
+                                "name": "stepDocuments",
+                                "heading": "Step 3",
+                                "subheading": "Documents"
+                            },
+                            {
+                                "id": "stepFinish",
+                                "name": "stepFinish",
+                                "heading": "Step 4",
+                                "subheading": "Finish"
+                            }
+                        ]
+                    },
+
+                _tabsWithoutDocuments:
+                    {
+                        type: Array,
+                        value: [
+                            {
+                                "id": "stepSources",
+                                "name": "stepSources",
+                                "heading": "Step 1",
+                                "subheading": "Sites"
+                            },
+                            {
+                                "id": "stepConnections",
+                                "name": "stepConnections",
+                                "heading": "Step 2",
+                                "subheading": "Connections"
+                            },
+                            {
+                                "id": "stepFinish",
+                                "name": "stepFinish",
+                                "heading": "Step 3",
+                                "subheading": "Finish"
+                            }
+                        ]
+                    },
             },
 
             ready: function()
             {
+                if (this.showDocumentsPanel)
+                    this._tabs = this._tabsWithDocuments;
+                else
+                    this._tabs = this._tabsWithoutDocuments;
+
                 // TODO: This is brittle. Get rid of it.
                 this.async(function()
                 {
-                    this._selectedPanelName = "step1";
+                    this._selectedPanelName = "stepSources";
                 });
+
+                this.addEventListener('ft-connect-wizard-show-documents-panel-changed-in-behavior', this._onFtConnectWizardShowDocumentsPanelChangedInBehavior);
+            },
+
+            _onFtConnectWizardShowDocumentsPanelChangedInBehavior: function(event)
+            {
+                var showDocumentsPanel = event.detail.to;
+
+                // Show or hide the panel and adjust the selection
+                var oldSelectedPanelName = this._selectedPanelName;
+                var newSelectedPanelName = oldSelectedPanelName;
+                this._selectedPanelName = null;
+                if (showDocumentsPanel)
+                {
+                    this._tabs = this._tabsWithDocuments;
+                    newSelectedPanelName = "stepDocuments";
+                }
+                else // hide "Documents" panel
+                {
+                    this._tabs = this._tabsWithoutDocuments;
+                    switch (oldSelectedPanelName)
+                    {
+                        case "stepDocuments":
+                        case "stepFinish":
+                            newSelectedPanelName = "stepFinish";
+                            break;
+                    }
+                }
+                this.async(function()
+                {
+                    this._selectedPanelName = newSelectedPanelName;
+                });
+
+                // TODO: Suppress the retrieval of thumbnails to save time?
             },
 
             _onIdentifySourceCommand: function(event)
@@ -470,7 +588,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             _onWizardConnectionsChanged: function()
             {
-                var tab = this._findTabWithId("step2");
+                var tab = this._findTabWithId("stepConnections");
                 if (!tab)
                     return;
 
@@ -512,7 +630,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             _onWizardDocumentsChanged: function()
             {
-                var tab = this._findTabWithId("step3");
+                var tab = this._findTabWithId("stepDocuments");
                 if (!tab)
                     return;
 
@@ -553,12 +671,12 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             _onWizardAddConnectionCommand: function()
             {
-                this._selectedPanelName = "step1";
+                this._selectedPanelName = "stepSources";
             },
 
             _onWizardViewConnectionsCommand: function()
             {
-                this._selectedPanelName = "step2";
+                this._selectedPanelName = "stepConnections";
             },
 
             _onSelectedPanelNameChanged: function(to, from)
@@ -566,21 +684,33 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 this._instructions = this._getInstructions();
 
                 // TODO: Temporary hack until we get the model updates working
-                if (to === "step4")
+                if (to === "stepFinish")
                     this.$.finishPanel.wasShown();
+            },
+
+            _onShowDocumentsPanelChanged: function(to, from)
+            {
+                if (this.showDocumentsPanel)
+                {
+
+                }
+                else
+                {
+
+                }
             },
 
             _getInstructions: function()
             {
                 switch (this._selectedPanelName)
                 {
-                    case "step1":
+                    case "stepSources":
                         return this._getInstructionsForSourcePanel();
-                    case "step2":
+                    case "stepConnections":
                         return this._getInstructionsForConnectionPanel();
-                    case "step3":
+                    case "stepDocuments":
                         return this._getInstructionsForDocumentPanel();
-                    case "step4":
+                    case "stepFinish":
                         return this._getInstructionsForFinishPanel();
                     default:
                         return "";
@@ -703,7 +833,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             _onCreateConnectionCommand: function(event)
             {
-                this._selectedPanelName = "step2";
+                this._selectedPanelName = "stepConnections";
             },
 
             pageCodeDropIn:
