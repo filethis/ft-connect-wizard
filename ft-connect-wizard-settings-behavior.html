@@ -15,9 +15,9 @@ limitations under the License.
 -->
 
 
-<link rel="import" href="bower_components/polymer/polymer.html">
+<!--<link rel="import" href="bower_components/polymer/polymer.html">-->
 
-<!--<link rel="import" href="../polymer/polymer.html">-->
+<link rel="import" href="../polymer/polymer.html">
 
 
 <script>
@@ -83,26 +83,26 @@ limitations under the License.
             this.fire("internal-settings-changed");
         },
 
-        generateSettingsElement: function()
+        generateSettingsElement: function(indent)
         {
             if (!this.hasSettings())
                 return "";
 
-            var settings = "<ft-connect-wizard-settings";
+            var settings = indent + "<ft-connect-wizard-settings";
 
             // Keep alphabetized
             if (this.ftConnectWizardShowDocumentsPanel !== true)
-                settings += this._buildSettingAttribute("ft-connect-wizard-show-documents-panel", "false");
+                settings += "        " + this._buildSettingAttribute("ft-connect-wizard-show-documents-panel", "false", indent);
 
-            settings += ">\n</ft-connect-wizard-settings>\n";
+            settings += ">\n" + indent + "</ft-connect-wizard-settings>\n";
 
             return settings;
         },
 
         // TODO: Factor out from here and copies in other classes
-        _buildSettingAttribute: function(propertyName, propertyValue)
+        _buildSettingAttribute: function(propertyName, propertyValue, indent)
         {
-            return '\n    ' + propertyName + '="' + propertyValue + '"';
+            return '\n' + indent + '    ' + propertyName + '="' + propertyValue + '"';
         },
 
         hasSettings: function()
