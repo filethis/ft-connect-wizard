@@ -850,19 +850,19 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "</html>\n",
 
             pageCodePolyfillsDropIn:
-                "    <!-- Load any polyfills needed by the user's browser to support Web Components -->\n" +
+                "    <!-- Load any needed Web Components polyfills from the FileThis CDN -->\n" +
                 "    <script src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/webcomponents-loader.js\"><\/script>\n",
 
             pageCodePolyfillsCustom:
-                "    <!-- Load any polyfills needed by the user's browser to support Web Components -->\n" +
+                "    <!-- Load any needed Web Components polyfills from the local Bower directory -->\n" +
                 "    <script src\"../bower_components/webcomponentsjs/webcomponents-loader.js\"><\/script>\n",
 
             pageCodeImportsDropIn:
-                "    <!-- Import the FileThis \"wizard\" Web Component -->\n" +
+                "    <!-- Import the \"wizard\" Web Component from the FileThis CDN -->\n" +
                 "    <link rel=\"import\" href=\"https://connect.filethis.com/ft-connect-wizard/{{LATEST_DROPIN_VERSION}}/dropin/ft-connect-wizard.html\">\n",
 
             pageCodeImportsCustom:
-                "    <!-- Import the FileThis \"wizard\" Web Component -->\n" +
+                "    <!-- Import the \"wizard\" Web Component from the local Bower directory -->\n" +
                 "    <link rel=\"import\" href=\"../bower_components/{{NAME}}/{{NAME}}.html\">\n",
             
             pageCodeWizard:
@@ -875,13 +875,13 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "                    display: block;\n" +
                 "                }\n" +
                 "\n" +
-                "                /* Style configuration */\n" +
+                "                /* Style configuration for sub-components */\n" +
                 "                :root {\n" +
                 "{{STYLING}}" +
                 "                }\n" +
                 "            </style>\n" +
                 "\n" +
-                "            <!-- Settings configuration -->\n" +
+                "            <!-- Settings configuration for sub-components -->\n" +
                 "{{SETTINGS}}" +
                 "\n" +
                 "            <!-- Wizard template -->\n"+
@@ -911,9 +911,16 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "                    wizard.addEventListener('wizard-canceled-command', this.onWizardCanceledCommand);\n" +
                 "                    wizard.addEventListener('wizard-done-command', this.onWizardDoneCommand);\n" +
                 "                },\n" +
-                "                onWizardError: function(event) { alert(\"onWizardError\"); },\n" +
-                "                onWizardCanceledCommand: function(event) { alert(\"onWizardCanceledCommand\"); },\n" +
-                "                onWizardDoneCommand: function(event) { alert(\"onWizardDoneCommand\"); }\n" +
+                "                onWizardError: function(event) { alert(this.getErrorMessage(event)); },\n" +
+                "                onWizardCanceledCommand: function(event) { alert(\"Wizard canceled\"); },\n" +
+                "                onWizardDoneCommand: function(event) { alert(\"Wizard done\"); },\n" +
+                "                getErrorMessage: function(event) {\n" +
+                "                    if (!event.detail) return \"Wizard error\";\n" +
+                "                    if (event.detail.message) return event.detail.message;\n" +
+                "                    if (!event.detail.response) return \"Wizard error\";\n" +
+                "                    if (event.detail.response.message) return event.detail.response.message;\n" +
+                "                    return \"Wizard error\";\n" +
+                "                }\n" +
                 "            })\n" +
                 "        <\/script>\n" +
                 "    <\/dom-module>\n"+
