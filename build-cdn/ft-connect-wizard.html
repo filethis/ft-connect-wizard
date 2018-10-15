@@ -14,37 +14,38 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 
-<link rel="import" href="../ft-confirmation-dialog/ft-confirmation-dialog.html">
-<link rel="import" href="../ft-connect-behavior/ft-connect-behavior.html">
-<link rel="import" href="../ft-connection-panel/ft-connection-panel.html">
-<link rel="import" href="../ft-connection-panel/ft-connection-panel-settings-behavior.html">
-<link rel="import" href="../ft-connection-list-item/ft-connection-list-item-settings-behavior.html">
-<link rel="import" href="../ft-connection-list-item/ft-connection-list-item-settings.html">
-<link rel="import" href="../ft-connect-wizard/ft-prompt-with-button.html">
-<link rel="import" href="../ft-connect-wizard/ft-wizard-finish-panel.html">
-<link rel="import" href="../ft-connect-wizard/ft-wizard-tab.html">
-<link rel="import" href="../ft-connect-wizard/ft-wizard-tab-bar.html">
-<link rel="import" href="../ft-connect-wizard/ft-connect-wizard-settings-behavior.html">
-<link rel="import" href="../ft-connect-wizard/ft-connect-wizard-settings.html">  <!-- Need to include so that goes into build -->
-<link rel="import" href="../ft-document-panel/ft-document-panel.html">
-<link rel="import" href="../ft-document-panel/ft-document-panel-settings-behavior.html">
-<link rel="import" href="../ft-labeled-icon-button/ft-labeled-icon-button.html">
-<link rel="import" href="../ft-source-grid-item/ft-source-grid-item-settings-behavior.html">
-<link rel="import" href="../ft-source-panel/ft-source-panel.html">
-<link rel="import" href="../ft-source-panel/ft-source-identifier.html">
-<link rel="import" href="../ft-source-panel/ft-source-panel-settings-behavior.html">
-<link rel="import" href="../ft-user-interaction-form/ft-user-interaction-form.html">
-<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../iron-pages/iron-pages.html">
-<link rel="import" href="../paper-badge/paper-badge.html">
-<link rel="import" href="../paper-checkbox/paper-checkbox.html">
-<link rel="import" href="../paper-dialog/paper-dialog.html">
-<link rel="import" href="../paper-button/paper-button.html">
-<link rel="import" href="../paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../paper-tabs/paper-tabs.html">
-<link rel="import" href="../paper-tabs/paper-tab.html">
-<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="https://ft-confirmation-dialog/ft-confirmation-dialog.html">
+<link rel="import" href="https://ft-connect-behavior/ft-connect-behavior.html">
+<link rel="import" href="https://ft-connection-panel/ft-connection-panel.html">
+<link rel="import" href="https://ft-connection-panel/ft-connection-panel-settings-behavior.html">
+<link rel="import" href="https://ft-connection-list-item/ft-connection-list-item-settings-behavior.html">
+<link rel="import" href="https://ft-connection-list-item/ft-connection-list-item-settings.html">
+<link rel="import" href="https://ft-document-panel/ft-document-panel.html">
+<link rel="import" href="https://ft-document-panel/ft-document-panel-settings-behavior.html">
+<link rel="import" href="https://ft-labeled-icon-button/ft-labeled-icon-button.html">
+<link rel="import" href="https://ft-source-grid-item/ft-source-grid-item-settings-behavior.html">
+<link rel="import" href="https://ft-source-panel/ft-source-panel.html">
+<link rel="import" href="https://ft-source-panel/ft-source-identifier.html">
+<link rel="import" href="https://ft-source-panel/ft-source-panel-settings-behavior.html">
+<link rel="import" href="https://ft-user-interaction-form/ft-user-interaction-form.html">
+<link rel="import" href="https://iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="https://iron-pages/iron-pages.html">
+<link rel="import" href="https://paper-badge/paper-badge.html">
+<link rel="import" href="https://paper-checkbox/paper-checkbox.html">
+<link rel="import" href="https://paper-dialog/paper-dialog.html">
+<link rel="import" href="https://paper-button/paper-button.html">
+<link rel="import" href="https://paper-icon-button/paper-icon-button.html">
+<link rel="import" href="https://paper-tabs/paper-tabs.html">
+<link rel="import" href="https://paper-tabs/paper-tab.html">
+<link rel="import" href="https://polymer/polymer.html">
+<link rel="import" href="https://app-storage/app-localstorage/app-localstorage-document.html">
 
+<link rel="import" href="https://localhost:6666/ft-prompt-with-button.html">
+<link rel="import" href="https://localhost:6666/ft-wizard-finish-panel.html">
+<link rel="import" href="https://localhost:6666/ft-wizard-tab.html">
+<link rel="import" href="https://localhost:6666/ft-wizard-tab-bar.html">
+<link rel="import" href="https://localhost:6666/ft-connect-wizard-settings-behavior.html">
+<link rel="import" href="https://localhost:6666/ft-connect-wizard-settings.html">  <!-- Need to include so that goes into build -->
 
 
 <!--
@@ -114,6 +115,9 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 @apply --ft-connect-wizard-tab-selected;
             }
         </style>
+
+        <app-localstorage-document key="ftConnectWizardShowDocumentsPanel" data="{{ftConnectWizardShowDocumentsPanel}}">
+        </app-localstorage-document>
 
         <!-- Header -->
         <div
