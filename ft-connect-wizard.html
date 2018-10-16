@@ -813,8 +813,9 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "</head>\n" +
                 "\n" +
                 "<body>\n" +
-                "{{IMPORTS}}" +
-                "\n" +
+                "    <!-- Imports -->\n" +
+                "    <link rel=\"import\" href=\"https://connect.filethis.com/{{RELEASE_VERSION}}/ft-connect-wizard/ft-connect-wizard.html\">\n" +
+                "{{SETTINGS_IMPORTS}}" +
                 "{{WIZARD}}" +
                 "</body>\n"+
                 "</html>\n",
@@ -852,7 +853,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "            </style>\n" +
                 "\n" +
                 "            <!-- Settings configuration for sub-components -->\n" +
-                "{{SETTINGS}}" +
+                "{{SETTINGS_ELEMENTS}}" +
                 "\n" +
                 "            <!-- Wizard template -->\n"+
                 "            <ft-connect-wizard\n" +
@@ -906,24 +907,16 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "        fake-sources=\"true\">\n" +
                 "    </ft-connect-wizard-configured>\n",
 
-            getPageCodeTemplate: function(isDropIn, hasStyling, hasSettings)
+            getPageCodeTemplate: function(isDropIn, hasSettingsImports, hasSettingsElements)
             {
                 var code = this.pageCode;
 
                 var polyfills;
-                var imports;
                 if (isDropIn)
-                {
                     polyfills = this.pageCodePolyfillsDropIn;
-                    imports = this.pageCodeImportsDropIn;
-                }
                 else // Custom
-                {
                     polyfills = this.pageCodePolyfillsCustom;
-                    imports = this.pageCodeImportsCustom;
-                }
                 code = code.replace(/{{POLYFILLS}}/g, polyfills);
-                code = code.replace(/{{IMPORTS}}/g, imports);
 
                 code = code.replace(/{{WIZARD}}/g, this.pageCodeWizard);
 
