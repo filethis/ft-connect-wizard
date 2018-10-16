@@ -412,6 +412,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 {
                     type: String,
                     notify: true,
+                    value: "sources",
                     observer: "_onSelectedPanelNameChanged"
                 },
 
@@ -503,12 +504,6 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     this._tabs = this._tabsWithDocuments;
                 else
                     this._tabs = this._tabsWithoutDocuments;
-
-                // TODO: This is brittle. Get rid of it.
-                this.async(function()
-                {
-                    this.selectedPanelName = "sources";
-                });
 
                 this.addEventListener('ft-connect-wizard-show-documents-panel-changed-in-behavior', this._onFtConnectWizardShowDocumentsPanelChangedInBehavior);
             },

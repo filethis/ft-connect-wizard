@@ -85,14 +85,35 @@ An element that implements a tab bar with arrow-shaped tabs.
                 {
                     type: String,
                     notify: true,
-                    observer: "_onSelectedChanged"
+                    observer: "_onSelectedChanged",
                 },
 
                 items:
                 {
                     type: Array,
-                    value: []
+                    notify: true,
+                    value: [],
                 }
+            },
+
+            attached: function()
+            {
+                setTimeout(function()
+                {
+                    // Make sure the tab is selected.
+                    // It may not be, if the items list was not defined when the selection was initialized.
+                    var selected = this.selected;
+                    if (!!selected)
+                        this._selectTab(selected);
+                }.bind(this), 1);
+                // this.async(function()
+                // {
+                //     // Make sure the tab is selected.
+                //     // It may not be, if the items list was not defined when the selection was initialized.
+                //     var selected = this.selected;
+                //     if (!!selected)
+                //         this._selectTab(selected);
+                // });
             },
             
             findTabWithId: function(id)
@@ -118,30 +139,40 @@ An element that implements a tab bar with arrow-shaped tabs.
 
             _onSelectedChanged: function(toName, fromName)
             {
+                // Don't do anything until both the items list and the selected item are defined
+                if (!this.selected || !this.items)
+                    return;
+
                 if (fromName)
-                {
-                    // Deselect this tab
-                    var fromTab = this._findTabWithName(fromName);
-                    if (!!fromTab)
-                        fromTab.selected = false;
-
-                    // Deselect the tail in the tab before this one
-                    var previousTab = this._getPreviousTab(fromName);
-                    if (!!previousTab)
-                        previousTab.nextSelected = false;
-                }
+                    this._deselectTab(fromName);
                 if (toName)
-                {
-                    // Select this tab
-                    var toTab = this._findTabWithName(toName);
-                    if (!!toTab)
-                        toTab.selected = true;
+                    this._selectTab(toName);
+            },
 
-                    // Select the tail in the tab before this one
-                    var previousTab = this._getPreviousTab(toName);
-                    if (!!previousTab)
-                        previousTab.nextSelected = true;
-                }
+            _selectTab: function(name)
+            {
+                // Select this tab
+                var tab = this._findTabWithName(name);
+                if (!!tab)
+                    tab.selected = true;
+
+                // Select the tail in the tab before this one
+                var previousTab = this._getPreviousTab(name);
+                if (!!previousTab)
+                    previousTab.nextSelected = true;
+            },
+
+            _deselectTab: function(name)
+            {
+                // Deselect this tab
+                var tab = this._findTabWithName(name);
+                if (!!tab)
+                    tab.selected = false;
+
+                // Deselect the tail in the tab before this one
+                var previousTab = this._getPreviousTab(name);
+                if (!!previousTab)
+                    previousTab.nextSelected = false;
             },
 
             _findTabWithName: function(name)
