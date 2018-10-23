@@ -1,6 +1,6 @@
 # Project configuration
 NAME=ft-connect-wizard
-VERSION=2.0.1
+VERSION=2.0.3
 LOCAL_PORT=3507
 GITHUB_USER=filethis
 GITHUB_USER_ABBREV=ft
