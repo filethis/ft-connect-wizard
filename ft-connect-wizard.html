@@ -814,23 +814,30 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "{{SETTINGS_IMPORTS}}" +
                 "{{WIZARD}}" +
                 "</body>\n"+
-                "</html>\n",
+                "</html>\n"
+                ,
 
             pageCodePolyfillsDropIn:
                 "    <!-- Load any needed Web Components polyfills from the FileThis CDN -->\n" +
-                "    <script src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/webcomponents-loader.js\"><\/script>\n",
+                "    <script src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/custom-elements-es5-adapter.js\"><\/script>\n" +
+                "    <script src=\"https://unpkg.com/polymer-build@2.1.1/lib/babel-helpers.min.js\"><\/script>\n" +
+                "    <script src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/webcomponents-loader.js\"><\/script>\n"
+                ,
 
             pageCodePolyfillsCustom:
                 "    <!-- Load any needed Web Components polyfills from the local Bower directory -->\n" +
-                "    <script src\"../bower_components/webcomponentsjs/webcomponents-loader.js\"><\/script>\n",
+                "    <script src\"../bower_components/webcomponentsjs/webcomponents-loader.js\"><\/script>\n"
+                ,
 
             pageCodeImportsDropIn:
                 "    <!-- Import the \"wizard\" Web Component from the FileThis CDN -->\n" +
-                "    <link rel=\"import\" href=\"https://connect.filethis.com/ft-connect-wizard/{{LATEST_DROPIN_VERSION}}/dropin/ft-connect-wizard.html\">\n",
+                "    <link rel=\"import\" href=\"https://connect.filethis.com/ft-connect-wizard/{{LATEST_DROPIN_VERSION}}/dropin/ft-connect-wizard.html\">\n"
+                ,
 
             pageCodeImportsCustom:
                 "    <!-- Import the \"wizard\" Web Component from the local Bower directory -->\n" +
-                "    <link rel=\"import\" href=\"../bower_components/{{NAME}}/{{NAME}}.html\">\n",
+                "    <link rel=\"import\" href=\"../bower_components/{{NAME}}/{{NAME}}.html\">\n"
+                ,
             
             pageCodeWizard:
                 "    <!-- Define a template that lets us configure the ft-connect-wizard -->\n" +
@@ -901,7 +908,8 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "        live=\"true\"\n" +
                 "        debug=\"true\"\n" +
                 "        fake-sources=\"true\">\n" +
-                "    </ft-connect-wizard-configured>\n",
+                "    </ft-connect-wizard-configured>\n"
+                ,
 
             getPageCodeTemplate: function(isDropIn, hasSettingsImports, hasSettingsElements)
             {
