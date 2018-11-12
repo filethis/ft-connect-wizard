@@ -35,6 +35,7 @@ limitations under the License.
 
         observers:[
             '_onInternalSettingsChanged(ftConnectWizardShowDocumentsPanel)',
+            '_onInternalSettingsChanged(ftConnectWizardShowDocumentCountBadge)',
         ],
 
         properties: {
@@ -53,6 +54,20 @@ limitations under the License.
                 observer: "_onFtConnectWizardShowDocumentsPanelChanged"
             },
 
+            /**
+             * Whether to show the document count badge in the tabs of the wizard, or not.
+             *
+             * Note that you can provide the strings "true" and "false" as attribute values.
+             *
+             * @type {boolean}
+             */
+            ftConnectWizardShowDocumentCountBadge: {
+                type: Object,
+                value: true,
+                notify: true,
+                observer: "_onFtConnectWizardShowCountBadgeChanged"
+            },
+
         },
 
         attached: function()
@@ -60,6 +75,7 @@ limitations under the License.
             this.async(function()
             {
                 this._applySettingToProperty("ft-connect-wizard-show-documents-panel", "ftConnectWizardShowDocumentsPanel");
+                this._applySettingToProperty("ft-connect-wizard-show-document-count-badge", "ftConnectWizardShowDocumentCountBadge");
             });
         },
 
@@ -74,6 +90,11 @@ limitations under the License.
         _onFtConnectWizardShowDocumentsPanelChanged: function(to, from)
         {
             this.dispatchEvent(new CustomEvent('ft-connect-wizard-show-documents-panel-changed-in-behavior', {detail: {to: to, from: from}}));
+        },
+
+        _onFtConnectWizardShowCountBadgeChanged: function(to, from)
+        {
+            this.dispatchEvent(new CustomEvent('ft-connect-wizard-show-document-count-badge-changed-in-behavior', {detail: {to: to, from: from}}));
         },
 
         _onInternalSettingsChanged: function(to)
@@ -101,6 +122,8 @@ limitations under the License.
             // Keep alphabetized
             if (this.ftConnectWizardShowDocumentsPanel !== true)
                 settings += "        " + this._buildSettingAttribute("ft-connect-wizard-show-documents-panel", "false", indent);
+            if (this.ftConnectWizardShowDocumentCountBadge !== true)
+                settings += "        " + this._buildSettingAttribute("ft-connect-wizard-show-document-count-badge", "false", indent);
 
             settings += ">\n" + indent + "</ft-connect-wizard-settings>\n";
 
@@ -117,12 +140,15 @@ limitations under the License.
         {
             if (this.ftConnectWizardShowDocumentsPanel !== true)
                 return true;
+            if (this.ftConnectWizardShowDocumentCountBadge !== true)
+                return true;
             return false;
         },
 
         revertToDefaults: function()
         {
             this.ftConnectWizardShowDocumentsPanel = true;
+            this.ftConnectWizardShowDocumentCountBadge = true;
         },
     }
 

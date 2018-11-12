@@ -100,10 +100,9 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 @apply --ft-connect-wizard-finish-panel;
             }
             #modalInteractionDialog {
-                width: 450px;
-                padding-left: 40px;
-                padding-top: 12px;
-                padding-right: 40px;
+                padding-left: 20px;
+                padding-top: 8px;
+                padding-right: 20px;
                 padding-bottom: 5px;
                 @apply --ft-connect-wizard-user-interaction-dialog;
             }
@@ -511,6 +510,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     this._tabs = this._tabsWithoutDocuments;
 
                 this.addEventListener('ft-connect-wizard-show-documents-panel-changed-in-behavior', this._onFtConnectWizardShowDocumentsPanelChangedInBehavior);
+                this.addEventListener('ft-connect-wizard-show-document-count-badge-changed-in-behavior', this._onFtConnectWizardShowDocumentCountBadgeChangedInBehavior);
             },
 
             _onFtConnectWizardShowDocumentsPanelChangedInBehavior: function(event)
@@ -524,7 +524,6 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 if (showDocumentsPanel)
                 {
                     this._tabs = this._tabsWithDocuments;
-                    newSelectedPanelName = "documents";
                 }
                 else // hide "Documents" panel
                 {
@@ -532,7 +531,6 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     switch (oldSelectedPanelName)
                     {
                         case "documents":
-                        case "finish":
                             newSelectedPanelName = "finish";
                             break;
                     }
@@ -540,9 +538,28 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 this.async(function()
                 {
                     this.selectedPanelName = newSelectedPanelName;
+
+                    // HACK: Don't know why we have to do this...
+                    var finishTab = this._findTabWithId("stepFinish");
+                    if (finishTab)
+                        finishTab.showBadge = false;
+                    var documentsTab = this._findTabWithId("stepDocuments");
+                    if (documentsTab)
+                        documentsTab.showBadge = this.ftConnectWizardShowDocumentCountBadge;
                 });
 
                 // TODO: Suppress the retrieval of thumbnails to save time?
+            },
+
+            _onFtConnectWizardShowDocumentCountBadgeChangedInBehavior: function(event)
+            {
+                var showBadge = event.detail.to;
+
+                var tab = this._findTabWithId("stepDocuments");
+                if (!tab)
+                    return;
+
+                tab.showBadge = showBadge;
             },
 
             _onIdentifySourceCommand: function(event)
@@ -592,6 +609,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 }
 
                 this._showConnectionPrompt = showConnectionPrompt;
+
                 tab.showSpinner = showSpinner;
                 tab.showBadge = showBadge;
                 tab.badgeLabel = badgeLabel;
@@ -623,7 +641,11 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                     badgeLabel = documentCount.toString();
                 }
 
+                if (!this.ftConnectWizardShowDocumentCountBadge)
+                    showBadge = false;
+
                 this._showDocumentPrompt = showDocumentPrompt;
+
                 tab.showBadge = showBadge;
                 tab.badgeLabel = badgeLabel;
                 tab.badgeFlashOnLabelChange = badgeFlashOnLabelChange;
@@ -766,29 +788,6 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 //                    }.bind(this));
 //            },
 
-            poseNextPendingInteractionRequest: function()
-            {
-                if (this._interactionRequests.length === 0)
-                    return;
-
-                // If we already have a dialog posed
-                if (this.$.modalInteractionDialog.opened)
-                    return;
-
-                // Pose the first request
-                var interactionRequest = this._interactionRequests[0];
-                this._interactionRequest = interactionRequest;
-                this.$.modalInteractionDialog.open();
-                return interactionRequest;
-            },
-
-            _poseNextPendingInteractionRequest: function()
-            {
-                if (!this.poseUserInteractionsAutomatically)
-                    return;
-                return this.poseNextPendingInteractionRequest();
-            },
-
             _onCreateConnectionCommand: function(event)
             {
                 this.selectedPanelName = "connections";
@@ -823,9 +822,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             pageCodePolyfillsDropIn:
                 "    <!-- Load any needed Web Components polyfills from the FileThis CDN -->\n" +
-                "    <script>if (!window.customElements) { document.write('<!--'); }<\/script>\n" +
                 "    <script src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/custom-elements-es5-adapter.js\"><\/script>\n" +
-                "    <!--! do not remove -->\n" +
                 "    <script src=\"https://unpkg.com/polymer-build@2.1.1/lib/babel-helpers.min.js\"><\/script>\n" +
                 "    <script src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/webcomponents-loader.js\"><\/script>\n"
                 ,
