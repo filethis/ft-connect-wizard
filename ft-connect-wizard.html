@@ -17,21 +17,25 @@ limitations under the License.
 <link rel="import" href="../ft-confirmation-dialog/ft-confirmation-dialog.html">
 <link rel="import" href="../ft-connect-behavior/ft-connect-behavior.html">
 <link rel="import" href="../ft-connection-panel/ft-connection-panel.html">
+<link rel="import" href="../ft-connection-panel/ft-connection-panel-settings.html">
 <link rel="import" href="../ft-connection-panel/ft-connection-panel-settings-behavior.html">
-<link rel="import" href="../ft-connection-list-item/ft-connection-list-item-settings-behavior.html">
 <link rel="import" href="../ft-connection-list-item/ft-connection-list-item-settings.html">
+<link rel="import" href="../ft-connection-list-item/ft-connection-list-item-settings-behavior.html">
 <link rel="import" href="../ft-connect-wizard/ft-prompt-with-button.html">
 <link rel="import" href="../ft-connect-wizard/ft-wizard-finish-panel.html">
 <link rel="import" href="../ft-connect-wizard/ft-wizard-tab.html">
 <link rel="import" href="../ft-connect-wizard/ft-wizard-tab-bar.html">
 <link rel="import" href="../ft-connect-wizard/ft-connect-wizard-settings-behavior.html">
-<link rel="import" href="../ft-connect-wizard/ft-connect-wizard-settings.html">  <!-- Need to include so that goes into build -->
+<link rel="import" href="../ft-connect-wizard/ft-connect-wizard-settings.html">
 <link rel="import" href="../ft-document-panel/ft-document-panel.html">
+<link rel="import" href="../ft-document-panel/ft-document-panel-settings.html">
 <link rel="import" href="../ft-document-panel/ft-document-panel-settings-behavior.html">
 <link rel="import" href="../ft-labeled-icon-button/ft-labeled-icon-button.html">
+<link rel="import" href="../ft-source-grid-item/ft-source-grid-item-settings.html">
 <link rel="import" href="../ft-source-grid-item/ft-source-grid-item-settings-behavior.html">
 <link rel="import" href="../ft-source-panel/ft-source-panel.html">
 <link rel="import" href="../ft-source-panel/ft-source-identifier.html">
+<link rel="import" href="../ft-source-panel/ft-source-panel-settings.html">
 <link rel="import" href="../ft-source-panel/ft-source-panel-settings-behavior.html">
 <link rel="import" href="../ft-user-interaction-form/ft-user-interaction-form.html">
 <link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
@@ -810,7 +814,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "\n" +
                 "<body>\n" +
                 "    <!-- Imports -->\n" +
-                "    <link rel=\"import\" href=\"https://connect.filethis.com/{{RELEASE_VERSION}}/ft-connect-wizard/ft-connect-wizard.html\">\n" +
+                "    <link rel=\"import\" href=\"https://connect.filethis.com/ft-connect-wizard/{{RELEASE_VERSION}}/ft-connect-wizard.html\">\n" +
                 "{{SETTINGS_IMPORTS}}" +
                 "{{WIZARD}}" +
                 "</body>\n"+
@@ -819,7 +823,9 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
 
             pageCodePolyfillsDropIn:
                 "    <!-- Load any needed Web Components polyfills from the FileThis CDN -->\n" +
+                "    <script>if (!window.customElements) { document.write('<!--'); }<\/script>\n" +
                 "    <script src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/custom-elements-es5-adapter.js\"><\/script>\n" +
+                "    <!--! do not remove -->\n" +
                 "    <script src=\"https://unpkg.com/polymer-build@2.1.1/lib/babel-helpers.min.js\"><\/script>\n" +
                 "    <script src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/webcomponents-loader.js\"><\/script>\n"
                 ,
