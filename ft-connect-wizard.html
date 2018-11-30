@@ -804,6 +804,10 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "\n" +
                 "{{POLYFILLS}}" +
                 "\n" +
+                "    <!-- Imports -->\n" +
+                "    <link rel=\"import\" href=\"https://connect.filethis.com/ft-connect-wizard/{{RELEASE_VERSION}}/ft-connect-wizard.html\">\n" +
+                "{{SETTINGS_IMPORTS}}" +
+                "\n" +
                 "    <style>\n" +
                 "        html, body {\n" +
                 "            height: 100%;\n" +
@@ -813,9 +817,6 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "</head>\n" +
                 "\n" +
                 "<body>\n" +
-                "    <!-- Imports -->\n" +
-                "    <link rel=\"import\" href=\"https://connect.filethis.com/ft-connect-wizard/{{RELEASE_VERSION}}/ft-connect-wizard.html\">\n" +
-                "{{SETTINGS_IMPORTS}}" +
                 "{{WIZARD}}" +
                 "</body>\n"+
                 "</html>\n"
