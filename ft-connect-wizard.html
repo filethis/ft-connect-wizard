@@ -48,6 +48,7 @@ limitations under the License.
 <link rel="import" href="../paper-tabs/paper-tabs.html">
 <link rel="import" href="../paper-tabs/paper-tab.html">
 <link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../shadycss/apply-shim.html">
 
 
 
@@ -855,7 +856,7 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
                 "                }\n" +
                 "\n" +
                 "                /* Style configuration for sub-components */\n" +
-                "                :root {\n" +
+                "                :host > * {\n" +
                 "{{STYLING}}" +
                 "                }\n" +
                 "            </style>\n" +
