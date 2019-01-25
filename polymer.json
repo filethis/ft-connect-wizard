@@ -19,22 +19,26 @@
   },
   "builds": [
     {
-      "name": "dropin",
+      "name": "dev",
+      "bundle": false,
+      "js": {"minify": false, "compile": false},
+      "css": {"minify": false},
+      "html": {"minify": false},
+      "addServiceWorker": false,
+      "addPushManifest": false
+    },
+    {
+      "name": "prod",
+      "preset": "es5-bundled"
+    },
+    {
+      "name": "debug",
+      "preset": "es5-bundled",
       "bundle": true,
-      "js": {
-        "minify": true,
-        "compile": false
-      },
-      "css": {
-        "minify": true
-      },
-      "html": {
-        "minify": true
-      },
-      "excludes": ["/data/"],
-      "addServiceWorker": true,
-      "addPushManifest": true,
-      "insertPrefetchLinks": true
+      "js": { "minify": false},
+      "css": {"minify": false},
+      "html": { "minify": false},
+      "addServiceWorker": false
     }
   ]
 }
