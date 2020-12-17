@@ -2,12 +2,12 @@
   "version": "v1",
   "packages": {
     "ft-confirmation-dialog": {
-      "signature": "67e8a0df66a69ab6b858b258ced2a11c",
+      "signature": "a713a4bf5bdae8839e76001abe2ac659",
       "file": true,
       "replaced": "filethis/ft-confirmation-dialog#^1.0.24"
     },
     "ft-connect-behavior": {
-      "signature": "2bf6d6ae5ed136199e5c30d4681300a4",
+      "signature": "269b9b69b3d011a38648dfd5e4f43d5b",
       "file": true,
       "replaced": "filethis/ft-connect-behavior#^1.0.21"
     },
@@ -27,14 +27,62 @@
       "replaced": "filethis/ft-element-demo#^1.0.15"
     },
     "ft-source-panel": {
-      "signature": "3fe0bbe1ec15dc3f82ec340623043ace",
+      "signature": "3418bcec4d88e61dc310f30fbf56f2f8",
       "file": true,
       "replaced": "filethis/ft-source-panel#^1.0.30"
     },
     "ft-user-interaction-form": {
-      "signature": "3674695f7c648ae8f7e0ac17ee4bce47",
+      "signature": "8d960569b8dc8dbd167b9fa4f015ca04",
       "file": true,
       "replaced": "filethis/ft-user-interaction-form#^1.0.33"
+    },
+    "ft-connection-list-item": {
+      "signature": "7809b66fcb90656a5dd15585b6dfeb07",
+      "file": true
+    },
+    "ft-labeled-icon-button": {
+      "signature": "3bdce6f831e164c93c1d90acdd7db85f",
+      "file": true
+    },
+    "ft-source-grid-item": {
+      "signature": "e081a04ef879700269eb8b2b412f1260",
+      "file": true
+    },
+    "ft-error-behavior": {
+      "signature": "1b335d84711be52d0d40e327e3c1e76a",
+      "file": true
+    },
+    "ft-http-behavior": {
+      "signature": "43ccf0b053cd81cc1edefea84505c2ef",
+      "file": true
+    },
+    "ft-connection-list": {
+      "signature": "60f4e2e917e016ab0e6fd8750c05bb72",
+      "file": true
+    },
+    "ft-document-grid": {
+      "signature": "f49a5184d1f37e760cd73be4f9cf54cc",
+      "file": true
+    },
+    "ft-create-connection-dialog": {
+      "signature": "cad792a68436cd27efabeb905c31f6cc",
+      "file": true
+    },
+    "ft-source-grid": {
+      "signature": "58280ad2da03c5a6eb281a182af0e82f",
+      "file": true
+    },
+    "ft-document-grid-item": {
+      "signature": "112cf8541e64b3945fccd6ac01a8dff7",
+      "file": true
+    },
+    "ft-document-list": {
+      "signature": "0eb8a1527c4ac1718cb65f4620a6652b",
+      "file": true
+    },
+    "ft-document-list-item": {
+      "signature": "44690db08f5e124be1c90f2db987c9e5",
+      "file": true
     }
   }
 }

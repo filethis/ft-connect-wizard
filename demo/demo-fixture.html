@@ -1,12 +1,12 @@
 <!-- ft-connect-wizard element demo -->
 
 <!-- Imports -->
-<link rel="import" href="../../ft-connect-wizard/demo/ft-connect-wizard-settings-editor.html">
-<link rel="import" href="../../ft-connect-wizard/ft-connect-wizard.html">
-<link rel="import" href="../../ft-connect-wizard/ft-connect-wizard-settings.html">
-<link rel="import" href="../../ft-connection-list-item/ft-connection-list-item-settings.html">
-<link rel="import" href="../../iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../../polymer/polymer.html">
+<script type="module" src="./ft-connect-wizard-settings-editor.js"></script>
+<script type="module" src="../ft-connect-wizard.js"></script>
+<script type="module" src="../ft-connect-wizard-settings.js"></script>
+<script type="module" src="../../ft-connection-list-item/ft-connection-list-item-settings.js"></script>
+<script type="module" src="../../@polymer/iron-flex-layout/iron-flex-layout-classes.js"></script>
+<script type="module" src="../../@polymer/polymer/polymer-legacy.js"></script>
 
 
 <!--
@@ -70,41 +70,47 @@ A drop-in HTML 5 element that quickly, securely, and flexibly integrates your ap
 
     </template>
 
-    <script>
+    <script type="module">
+import './ft-connect-wizard-settings-editor.js';
+import '../ft-connect-wizard.js';
+import '../ft-connect-wizard-settings.js';
+import 'ft-connection-list-item/ft-connection-list-item-settings.js';
+import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
+import '@polymer/polymer/polymer-legacy.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
 
-        Polymer
-        ({
-            is: 'demo-fixture',
+Polymer
+({
+    is: 'demo-fixture',
 
-            ready: function()
-            {
-                var wizard = this.$.wizard;
+    ready: function()
+    {
+        var wizard = this.$.wizard;
 
-                wizard.addEventListener('ft-connect-error', onWizardError);
-                wizard.addEventListener('wizard-canceled-command', onWizardCanceledCommand);
-                wizard.addEventListener('wizard-done-command', onWizardDoneCommand);
+        wizard.addEventListener('ft-connect-error', onWizardError);
+        wizard.addEventListener('wizard-canceled-command', onWizardCanceledCommand);
+        wizard.addEventListener('wizard-done-command', onWizardDoneCommand);
 
-                wizard.getAllData();
-            },
+        wizard.getAllData();
+    },
 
-        });
+});
 
-        function onWizardError(event)
-        {
-            alert(event.detail);
-        }
+function onWizardError(event)
+{
+    alert(event.detail);
+}
 
-        function onWizardCanceledCommand(event)
-        {
-            alert("When the user clicks the \"Cancel\" button, your \"wizard-canceled-command\" event handler should do the appropriate thing in your workflow.");
-        }
+function onWizardCanceledCommand(event)
+{
+    alert("When the user clicks the \"Cancel\" button, your \"wizard-canceled-command\" event handler should do the appropriate thing in your workflow.");
+}
 
-        function onWizardDoneCommand(event)
-        {
-            alert("When the user clicks the \"Done\" button, your \"wizard-done-command\" event handler should do the appropriate thing in your workflow.");
-        }
-
-    </script>
+function onWizardDoneCommand(event)
+{
+    alert("When the user clicks the \"Done\" button, your \"wizard-done-command\" event handler should do the appropriate thing in your workflow.");
+}
+</script>
 
 </dom-module>
 

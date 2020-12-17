@@ -6,10 +6,10 @@
 
     <title>ft-connect-wizard Test</title>
 
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+    <script src="../../wct-browser-legacy/browser.js"></script>
 
-    <link rel="import" href="../ft-connect-wizard.html">
+    <script type="module" src="../ft-connect-wizard.js"></script>
 </head>
 <body>
 <test-fixture id="basic">
@@ -18,15 +18,16 @@
     </template>
 </test-fixture>
 
-<script>
-    suite('ft-connect-wizard', function()
+<script type="module">
+import '../ft-connect-wizard.js';
+suite('ft-connect-wizard', function()
+{
+    test('instantiating the element works', function()
     {
-        test('instantiating the element works', function()
-        {
-            var element = fixture('basic');
-            assert.equal(element.is, 'ft-connect-wizard');
-        });
+        var element = fixture('basic');
+        assert.equal(element.is, 'ft-connect-wizard');
     });
+});
 </script>
 </body>
 </html>

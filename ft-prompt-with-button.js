@@ -1,4 +1,4 @@
-<!--
+/*
 Copyright 2018 FileThis, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,20 +12,22 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
--->
+*/
+/*
+  FIXME(polymer-modulizer): the above comments were extracted
+  from HTML and may be out of place here. Review them and
+  then delete this comment!
+*/
+import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 
-
-<link rel="import" href="../iron-flex-layout/iron-flex-layout-classes.html">
-<link rel="import" href="../iron-label/iron-label.html">
-<link rel="import" href="../paper-button/paper-button.html">
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../shadycss/apply-shim.html">
-
-
-<dom-module id="ft-prompt-with-button">
-
-    <template>
-
+import '@polymer/iron-label/iron-label.js';
+import '@polymer/paper-button/paper-button.js';
+import '@polymer/polymer/polymer-legacy.js';
+import '@webcomponents/shadycss/entrypoints/apply-shim.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { html } from '@polymer/polymer/lib/utils/html-tag.js';
+Polymer({
+  _template: html`
         <style include="iron-flex iron-flex-alignment iron-positioning"></style>
 
         <style>
@@ -55,57 +57,42 @@ limitations under the License.
         </style>
 
         <!-- Instructions -->
-        <iron-label
-            id="instructions"
-            class="flex"
-        >
+        <iron-label id="instructions" class="flex">
             [[prompt]]
         </iron-label>
 
         <!-- Add Connection button -->
-        <paper-button
-            id="button"
-            raised
-            on-tap="_onCommandButtonClicked"
-        >
+        <paper-button id="button" raised="" on-tap="_onCommandButtonClicked">
             [[buttonLabel]]
         </paper-button>
+`,
 
-    </template>
+  is: 'ft-prompt-with-button',
 
-    <script>
-        Polymer({
+  properties: {
 
-            is: 'ft-prompt-with-button',
+      prompt:
+      {
+          type: String,
+          value: "Don't just sit there, do something.",
+      },
 
-            properties: {
+      buttonLabel:
+      {
+          type: String,
+          value: "Okay",
+      },
 
-                prompt:
-                {
-                    type: String,
-                    value: "Don't just sit there, do something.",
-                },
+      command:
+      {
+          type: String,
+          value: "doit",
+      },
 
-                buttonLabel:
-                {
-                    type: String,
-                    value: "Okay",
-                },
+  },
 
-                command:
-                {
-                    type: String,
-                    value: "doit",
-                },
-
-            },
-
-            _onCommandButtonClicked: function()
-            {
-                this.fire(this.command);
-            },
-
-        });
-    </script>
-</dom-module>
-
+  _onCommandButtonClicked: function()
+  {
+      this.fire(this.command);
+  }
+});
