@@ -1,0 +1,41 @@
+{
+  "description": "An element that lets FileThis Fetcher admins update the cookie property of user connections.",
+  "name": "ft-connect-wizard",
+  "version": "2.0.9",
+  "resolutions": {
+    "inherits": "2.0.3",
+    "samsam": "1.1.3",
+    "supports-color": "3.1.2",
+    "type-detect": "1.0.0"
+  },
+  "main": "ft-connection-cookie-manager.js",
+  "dependencies": {
+    "@polymer/app-route": "^3.0.0",
+    "@polymer/iron-a11y-keys": "^3.0.0",
+    "@polymer/iron-validator-behavior": "^3.0.0",
+    "@polymer/paper-badge": "^3.0.0",
+    "@polymer/paper-checkbox": "^3.0.0",
+    "@polymer/paper-dialog": "^3.0.0",
+    "@polymer/paper-dialog-scrollable": "^3.0.0",
+    "@polymer/paper-input": "^3.0.0",
+    "@polymer/paper-spinner": "^3.0.0",
+    "@polymer/paper-tabs": "^3.0.0",
+    "@polymer/paper-tooltip": "^3.0.0",
+    "@polymer/polymer": "^3.0.0",
+    "ft-confirmation-dialog": "file:.yalc/ft-confirmation-dialog",
+    "ft-connect-behavior": "file:.yalc/ft-connect-behavior",
+    "ft-connection-panel": "file:.yalc/ft-connection-panel",
+    "ft-document-panel": "file:.yalc/ft-document-panel",
+    "ft-element-demo": "file:.yalc/ft-element-demo",
+    "ft-source-panel": "file:.yalc/ft-source-panel",
+    "ft-user-interaction-form": "file:.yalc/ft-user-interaction-form",
+    "log4javascript": "^1.4.9"
+  },
+  "devDependencies": {
+    "@polymer/iron-component-page": "^4.0.0",
+    "@polymer/iron-demo-helpers": "^3.0.0",
+    "@polymer/iron-test-helpers": "^3.0.0",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
+    "wct-browser-legacy": "^1.0.1"
+  }
+}

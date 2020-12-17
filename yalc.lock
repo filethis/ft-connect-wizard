@@ -1,0 +1,40 @@
+{
+  "version": "v1",
+  "packages": {
+    "ft-confirmation-dialog": {
+      "signature": "67e8a0df66a69ab6b858b258ced2a11c",
+      "file": true,
+      "replaced": "filethis/ft-confirmation-dialog#^1.0.24"
+    },
+    "ft-connect-behavior": {
+      "signature": "2bf6d6ae5ed136199e5c30d4681300a4",
+      "file": true,
+      "replaced": "filethis/ft-connect-behavior#^1.0.21"
+    },
+    "ft-connection-panel": {
+      "signature": "89baf59001114bd162ba9769206d9518",
+      "file": true,
+      "replaced": "filethis/ft-connection-panel#^1.0.28"
+    },
+    "ft-document-panel": {
+      "signature": "40b4957dd9a59ee270fb4a02a3c82c93",
+      "file": true,
+      "replaced": "filethis/ft-document-panel#^1.0.31"
+    },
+    "ft-element-demo": {
+      "signature": "b246107b96990bfddd35a67af1d387b5",
+      "file": true,
+      "replaced": "filethis/ft-element-demo#^1.0.15"
+    },
+    "ft-source-panel": {
+      "signature": "3fe0bbe1ec15dc3f82ec340623043ace",
+      "file": true,
+      "replaced": "filethis/ft-source-panel#^1.0.30"
+    },
+    "ft-user-interaction-form": {
+      "signature": "3674695f7c648ae8f7e0ac17ee4bce47",
+      "file": true,
+      "replaced": "filethis/ft-user-interaction-form#^1.0.33"
+    }
+  }
+}

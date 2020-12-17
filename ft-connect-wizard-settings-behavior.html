@@ -17,6 +17,7 @@ limitations under the License.
 
 <link rel="import" href="../polymer/polymer.html">
 
+import { IronMeta } from '@polymer/iron-meta/iron-meta.js';
 
 <script>
 
@@ -81,7 +82,7 @@ limitations under the License.
 
         _applySettingToProperty: function(settingName, propertyName)
         {
-            var meta = new Polymer.IronMeta({type: "setting", key: settingName});
+            var meta = new IronMeta({type: "setting", key: settingName});
             var value = meta.value;
             if (value !== undefined)
                 this.set(propertyName, value);

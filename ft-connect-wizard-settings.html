@@ -20,6 +20,7 @@ limitations under the License.
 <link rel="import" href="../iron-meta/iron-meta.html">
 <link rel="import" href="../polymer/polymer.html">
 
+import { IronMeta } from '@polymer/iron-meta/iron-meta.js';
 
 <dom-module id="ft-connect-wizard-settings">
 
@@ -40,8 +41,8 @@ limitations under the License.
 
             _storeSettings: function()
             {
-                new Polymer.IronMeta({type: "setting", key: "ft-connect-wizard-show-documents-panel", value: this.ftConnectWizardShowDocumentsPanel});
-                new Polymer.IronMeta({type: "setting", key: "ft-connect-wizard-show-document-count-badge", value: this.ftConnectWizardShowDocumentCountBadge});
+                new IronMeta({type: "setting", key: "ft-connect-wizard-show-documents-panel", value: this.ftConnectWizardShowDocumentsPanel});
+                new IronMeta({type: "setting", key: "ft-connect-wizard-show-document-count-badge", value: this.ftConnectWizardShowDocumentCountBadge});
             },
 
         });
