@@ -7,7 +7,7 @@
       "replaced": "filethis/ft-confirmation-dialog#^1.0.24"
     },
     "ft-connect-behavior": {
-      "signature": "269b9b69b3d011a38648dfd5e4f43d5b",
+      "signature": "5ef460dab52a405b0a014934def48a03",
       "file": true,
       "replaced": "filethis/ft-connect-behavior#^1.0.21"
     },
@@ -27,7 +27,7 @@
       "replaced": "filethis/ft-element-demo#^1.0.15"
     },
     "ft-source-panel": {
-      "signature": "3418bcec4d88e61dc310f30fbf56f2f8",
+      "signature": "10e11811f4af2fa60d39fce553e84b5a",
       "file": true,
       "replaced": "filethis/ft-source-panel#^1.0.30"
     },
@@ -82,6 +82,10 @@
     },
     "ft-document-list-item": {
       "signature": "44690db08f5e124be1c90f2db987c9e5",
+      "file": true
+    },
+    "array-filter": {
+      "signature": "11b8ce3c28a76cd62ec3dd604498a16a",
       "file": true
     }
   }

@@ -69,7 +69,7 @@ Polymer
             <!-- Settings -->
             <ft-connect-wizard-settings-editor
                 slot="config"
-                style="height:100%; padding:20px; "
+                style="padding:20px; "
                 ft-connect-wizard-show-documents-panel="{{ftConnectWizardShowDocumentsPanel}}"
                 ft-connect-wizard-show-document-count-badge="{{ftConnectWizardShowDocumentCountBadge}}"
             >

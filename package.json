@@ -8,7 +8,7 @@
     "supports-color": "3.1.2",
     "type-detect": "1.0.0"
   },
-  "main": "ft-connection-cookie-manager.js",
+  "main": "ft-connect-wizard.js",
   "dependencies": {
     "@polymer/app-route": "^3.0.0",
     "@polymer/iron-a11y-keys": "^3.0.0",
@@ -23,6 +23,7 @@
     "@polymer/paper-tabs": "^3.0.0",
     "@polymer/paper-tooltip": "^3.0.0",
     "@polymer/polymer": "^3.0.0",
+    "array-filter": "file:.yalc/array-filter",
     "ft-confirmation-dialog": "file:.yalc/ft-confirmation-dialog",
     "ft-connect-behavior": "file:.yalc/ft-connect-behavior",
     "ft-connection-list": "file:.yalc/ft-connection-list",
