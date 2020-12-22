@@ -1,7 +1,7 @@
 # Project configuration
 NAME=ft-connect-wizard
 SRC_DIR=
-VERSION=2.0.9
+VERSION=3.0.0
 LOCAL_PORT=3507
 GITHUB_USER=filethis
 GITHUB_USER_ABBREV=ft
