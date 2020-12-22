@@ -30,7 +30,7 @@ An element that displays a list of FileThis connection resources
 import './ft-connect-wizard-settings-editor.js';
 import '../ft-connect-wizard.js';
 import '../ft-connect-wizard-settings.js';
-import 'ft-connection-list-item/ft-connection-list-item-settings.js';
+import '@filethis/ft-connection-list-item/ft-connection-list-item-settings.js';
 import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 import '@polymer/polymer/polymer-legacy.js';
 import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';

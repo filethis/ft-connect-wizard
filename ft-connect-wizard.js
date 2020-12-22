@@ -25,31 +25,31 @@ An element that implements a FileThis user workflow as a set of tabbed panels. A
   from HTML and may be out of place here. Review them and
   then delete this comment!
 */
-import 'ft-confirmation-dialog/ft-confirmation-dialog.js';
+import '@filethis/ft-confirmation-dialog/ft-confirmation-dialog.js';
 
-import 'ft-connect-behavior/ft-connect-behavior.js';
-import 'ft-connection-panel/ft-connection-panel.js';
-import 'ft-connection-panel/ft-connection-panel-settings.js';
-import 'ft-connection-panel/ft-connection-panel-settings-behavior.js';
-import 'ft-connection-list-item/ft-connection-list-item-settings.js';
-import 'ft-connection-list-item/ft-connection-list-item-settings-behavior.js';
+import '@filethis/ft-connect-behavior/ft-connect-behavior.js';
+import '@filethis/ft-connection-panel/ft-connection-panel.js';
+import '@filethis/ft-connection-panel/ft-connection-panel-settings.js';
+import '@filethis/ft-connection-panel/ft-connection-panel-settings-behavior.js';
+import '@filethis/ft-connection-list-item/ft-connection-list-item-settings.js';
+import '@filethis/ft-connection-list-item/ft-connection-list-item-settings-behavior.js';
 import './ft-prompt-with-button.js';
 import './ft-wizard-finish-panel.js';
 import './ft-wizard-tab.js';
 import './ft-wizard-tab-bar.js';
 import './ft-connect-wizard-settings-behavior.js';
 import './ft-connect-wizard-settings.js';
-import 'ft-document-panel/ft-document-panel.js';
-import 'ft-document-panel/ft-document-panel-settings.js';
-import 'ft-document-panel/ft-document-panel-settings-behavior.js';
-import 'ft-labeled-icon-button/ft-labeled-icon-button.js';
-import 'ft-source-grid-item/ft-source-grid-item-settings.js';
-import 'ft-source-grid-item/ft-source-grid-item-settings-behavior.js';
-import 'ft-source-panel/ft-source-panel.js';
-import 'ft-source-panel/ft-source-identifier.js';
-import 'ft-source-panel/ft-source-panel-settings.js';
-import 'ft-source-panel/ft-source-panel-settings-behavior.js';
-import 'ft-user-interaction-form/ft-user-interaction-form.js';
+import '@filethis/ft-document-panel/ft-document-panel.js';
+import '@filethis/ft-document-panel/ft-document-panel-settings.js';
+import '@filethis/ft-document-panel/ft-document-panel-settings-behavior.js';
+import '@filethis/ft-labeled-icon-button/ft-labeled-icon-button.js';
+import '@filethis/ft-source-grid-item/ft-source-grid-item-settings.js';
+import '@filethis/ft-source-grid-item/ft-source-grid-item-settings-behavior.js';
+import '@filethis/ft-source-panel/ft-source-panel.js';
+import '@filethis/ft-source-panel/ft-source-identifier.js';
+import '@filethis/ft-source-panel/ft-source-panel-settings.js';
+import '@filethis/ft-source-panel/ft-source-panel-settings-behavior.js';
+import '@filethis/ft-user-interaction-form/ft-user-interaction-form.js';
 import '@polymer/iron-flex-layout/iron-flex-layout-classes.js';
 import '@polymer/iron-pages/iron-pages.js';
 import '@polymer/paper-badge/paper-badge.js';
