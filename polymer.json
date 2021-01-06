@@ -1,44 +1,35 @@
 {
-  "entrypoint": "ft-connect-wizard.html",
-  "shell": "ft-connect-wizard.html",
-  "fragments": [
-  ],
+  "npm": true,
+  "shell": "ft-connect-wizard.js",
+  "fragments": [],
   "sources": [
+    "*.js",
     "*.html"
-  ],
-  "extraDependencies": [
-    "manifest.json"
   ],
   "lint": {
     "rules": [
-      "polymer-2-hybrid"
-    ],
-    "ignoreWarnings": [
-      "multiple-doc-comments"
+      "polymer-3"
     ]
   },
   "builds": [
     {
-      "name": "dev",
-      "bundle": false,
-      "js": {"minify": false, "compile": false},
-      "css": {"minify": false},
-      "html": {"minify": false},
-      "addServiceWorker": false,
-      "addPushManifest": false
-    },
-    {
       "name": "prod",
-      "preset": "es5-bundled"
-    },
-    {
-      "name": "debug",
-      "preset": "es5-bundled",
-      "bundle": true,
-      "js": { "minify": false},
-      "css": {"minify": false},
-      "html": { "minify": false},
-      "addServiceWorker": false
+      "browserCapabilities": [
+        "es2015"
+      ],
+      "js": {
+        "minify": false,
+        "compile": false
+      },
+      "css": {
+        "minify": false
+      },
+      "html": {
+        "minify": false
+      },
+      "bundle": false,
+      "addServiceWorker": true,
+      "addPushManifest": false
     }
   ]
 }
