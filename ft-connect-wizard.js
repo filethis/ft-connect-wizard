@@ -675,131 +675,101 @@ Polymer({
   pageCode:
       "<!doctype html>\n" +
       "<html lang=\"en\">\n" +
+      "\n" +
       "<head>\n" +
       "    <meta charset=\"utf-8\">\n" +
-      "    <meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\">\n" +
       "    <meta name=\"viewport\" content=\"width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes\">\n" +
       "\n" +
-      "{{POLYFILLS}}" +
-      "\n" +
-      "    <!-- Imports -->\n" +
-      "    <link rel=\"import\" href=\"https://connect.filethis.com/ft-connect-wizard/{{RELEASE_VERSION}}/ft-connect-wizard.html\">\n" +
-      "{{SETTINGS_IMPORTS}}" +
-      "\n" +
-      "    <style>\n" +
-      "        html, body {\n" +
-      "            height: 100%;\n" +
-      "            margin: 0;\n" +
-      "        }\n" +
-      "    </style>\n" +
+      "    <script type=\"module\" src=\"https://connect.filethis.com/ft-connect-wizard/{{RELEASE_VERSION}}/ft-connect-wizard.js\"></script>\n" +
       "</head>\n" +
       "\n" +
       "<body>\n" +
-      "{{WIZARD}}" +
-      "</body>\n"+
-      "</html>\n",
-
-  pageCodePolyfillsDropIn:
-      "    <!-- Load any needed Web Components polyfills from the FileThis CDN -->\n" +
-      "    <script src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/custom-elements-es5-adapter.js\"><\/script>\n" +
-      "    <script src=\"https://unpkg.com/polymer-build@2.1.1/lib/babel-helpers.min.js\"><\/script>\n" +
-      "    <script src=\"https://connect.filethis.com/webcomponents/webcomponentsjs/1.0.0/webcomponents-loader.js\"><\/script>\n",
-
-  pageCodePolyfillsCustom:
-      "    <!-- Load any needed Web Components polyfills from the local Bower directory -->\n" +
-      "    <script src\"../bower_components/webcomponentsjs/webcomponents-loader.js\"><\/script>\n",
-
-  pageCodeImportsDropIn:
-      "    <!-- Import the \"wizard\" Web Component from the FileThis CDN -->\n" +
-      "    <link rel=\"import\" href=\"https://connect.filethis.com/ft-connect-wizard/{{LATEST_DROPIN_VERSION}}/dropin/ft-connect-wizard.html\">\n",
-
-  pageCodeImportsCustom:
-      "    <!-- Import the \"wizard\" Web Component from the local Bower directory -->\n" +
-      "    <link rel=\"import\" href=\"../bower_components/{{NAME}}/{{NAME}}.html\">\n",
-
-  pageCodeWizard:
-      "    <!-- Define a template that lets us configure the ft-connect-wizard -->\n" +
-      "    <dom-module id=\"ft-connect-wizard-configured\">\n" +
-      "        <template>\n" +
-      "            <style>\n" +
-      "                /* Styling for this component itself */\n" +
-      "                :host {\n" +
-      "                    display: block;\n" +
-      "                }\n" +
       "\n" +
-      "                /* Style configuration for sub-components */\n" +
-      "                :host > * {\n" +
+      "    <script type=\"module\">\n" +
+      "        import { PolymerElement, html } from 'https://connect.filethis.com/ft-connect-wizard/3.0.0/node_modules/@polymer/polymer/polymer-element.js';\n" +
+      "\n" +
+      "        // Wrap wizard with parent element that lets us customize it\n" +
+      "        class CustomizedWizard extends PolymerElement {\n" +
+      "            static get template() {\n" +
+      "                return html`\n" +
+      "                    <style>\n" +
+      "                        /* Styling for this component itself */\n" +
+      "                        :host {\n" +
+      "                            display: block;\n" +
+      "                        }\n" +
+      "\n" +
+      "                        /* Style configuration for its sub-components */\n" +
+      "                        :root {\n" +
       "{{STYLING}}" +
-      "                }\n" +
-      "            </style>\n" +
+      "                        }\n" +
+      "                    </style>\n" +
       "\n" +
-      "            <!-- Settings configuration for sub-components -->\n" +
+      "                    <!-- Settings configuration for sub-components -->\n" +
       "{{SETTINGS_ELEMENTS}}" +
       "\n" +
-      "            <!-- Wizard template -->\n"+
-      "            <ft-connect-wizard\n" +
-      "                style=\"width: 100%; height: 100%; \"\n" +
-      "                live=\"{{live}}\"\n" +
-      "                user-account-id=\"{{userAccountId}}\"\n" +
-      "                token=\"{{token}}\"\n" +
-      "                debug=\"{{debug}}\"\n" +
-      "                fake-sources=\"{{fakeSources}}\">\n" +
-      "            </ft-connect-wizard>\n" +
-      "        </template>\n" +
+      "                    <ft-connect-wizard\n" +
+      "                        style=\"width: 100%; height: 100%; \"\n" +
+      "                        live=\"[[live]]\"\n" +
+      "                        user-account-id=\"[[userAccountId]]\"\n" +
+      "                        token=\"[[token]]\"\n" +
+      "                        debug=\"[[debug]]\"\n" +
+      "                        >\n" +
+      "                    </ft-connect-wizard>\n" +
+      "                `;\n" +
+      "            }\n" +
       "\n" +
-      "        <script>\n" +
-      "            Polymer({\n" +
-      "                is: 'ft-connect-wizard-configured',\n" +
-      "                properties: {\n" +
-      "                    live: { type: Object, notify: true, value: false },\n" +
-      "                    userAccountId: { type: String, notify: true },\n" +
-      "                    token: { type: String, notify: true },\n" +
-      "                    debug: { type: Object, notify: true, value: false },\n" +
-      "                    fakeSources: { type: Object, notify: true, value: true },\n" +
-      "                },\n" +
-      "                ready: function() {\n" +
-      "                    var wizard = document.getElementById(\"wizard\");\n" +
-      "                    wizard.addEventListener('ft-connect-error', this.onWizardError);\n" +
-      "                    wizard.addEventListener('wizard-canceled-command', this.onWizardCanceledCommand);\n" +
-      "                    wizard.addEventListener('wizard-done-command', this.onWizardDoneCommand);\n" +
-      "                },\n" +
-      "                onWizardError: function(event) { alert(this.getErrorMessage(event)); },\n" +
-      "                onWizardCanceledCommand: function(event) { alert(\"Wizard canceled\"); },\n" +
-      "                onWizardDoneCommand: function(event) { alert(\"Wizard done\"); },\n" +
-      "                getErrorMessage: function(event) {\n" +
-      "                    if (!event.detail) return \"Wizard error\";\n" +
-      "                    if (event.detail.message) return event.detail.message;\n" +
-      "                    if (!event.detail.response) return \"Wizard error\";\n" +
-      "                    if (event.detail.response.message) return event.detail.response.message;\n" +
-      "                    return \"Wizard error\";\n" +
-      "                }\n" +
-      "            })\n" +
-      "        <\/script>\n" +
-      "    <\/dom-module>\n"+
-      "\n"+
-      "    <!-- Wizard instance -->\n"+
-      "    <ft-connect-wizard-configured\n"+
-      "        id=\"wizard\"\n"+
+      "            static get properties() {\n" +
+      "                return {\n" +
+      "                    live: { type: Object, value: true },\n" +
+      "                    userAccountId: { type: String },\n" +
+      "                    token: { type: String },\n" +
+      "                    debug: { type: Object, value: false },\n" +
+      "                    fakeSources: { type: Object, value: false }\n" +
+      "                };\n" +
+      "            }\n" +
+      "\n" +
+      "            ready() {\n" +
+      "                super.ready();\n" +
+      "                var wizard = document.getElementById(\"wizard\");\n" +
+      "                wizard.addEventListener('ft-connect-error', this.onWizardError);\n" +
+      "                wizard.addEventListener('wizard-canceled-command', this.onWizardCanceledCommand);\n" +
+      "                wizard.addEventListener('wizard-done-command', this.onWizardDoneCommand);\n" +
+      "            }\n" +
+      "\n" +
+      "            onWizardError(event) { alert(this.getErrorMessage(event)); }\n" +
+      "\n" +
+      "            onWizardCanceledCommand(event) { alert(\"Wizard canceled\"); }\n" +
+      "            \n" +
+      "            onWizardDoneCommand(event) { alert(\"Wizard done\"); }\n" +
+      "            \n" +
+      "            getErrorMessage(event) {\n" +
+      "                if (!event.detail) return \"Wizard error\";\n" +
+      "                if (event.detail.message) return event.detail.message;\n" +
+      "                if (!event.detail.response) return \"Wizard error\";\n" +
+      "                if (event.detail.response.message) return event.detail.response.message; return \"Wizard error\";\n" +
+      "            }\n" +
+      "        }\n" +
+      "        \n" +
+      "        window.customElements.define('customized-wizard', CustomizedWizard);\n" +
+      "    </script>\n" +
+      "\n" +
+      "    <!-- Customized wizard instance -->\n" +
+      "    <customized-wizard\n" +
+      "        id=\"wizard\" \n" +
       "        style=\"width: 800px; height: 500px; margin: 20px; border: 1px solid black; box-shadow: 5px 5px 4px #BBB; \"\n" +
       "        user-account-id=\"{{ACCOUNT_ID}}\"\n" +
       "        token=\"{{TOKEN}}\"\n" +
       "        live=\"true\"\n" +
-      "        debug=\"true\"\n" +
-      "        fake-sources=\"true\">\n" +
-      "    </ft-connect-wizard-configured>\n",
+      "    >\n" +
+      "    </customized-wizard>\n" +
+      "\n" +
+      "</body>\n" +
+      "\n" +
+      "</html>",
 
   getPageCodeTemplate: function(isDropIn, hasSettingsImports, hasSettingsElements)
   {
       var code = this.pageCode;
-
-      var polyfills;
-      if (isDropIn)
-          polyfills = this.pageCodePolyfillsDropIn;
-      else // Custom
-          polyfills = this.pageCodePolyfillsCustom;
-      code = code.replace(/{{POLYFILLS}}/g, polyfills);
-
-      code = code.replace(/{{WIZARD}}/g, this.pageCodeWizard);
 
       return code;
   }
