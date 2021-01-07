@@ -686,7 +686,7 @@ Polymer({
       "<body>\n" +
       "\n" +
       "    <script type=\"module\">\n" +
-      "        import { PolymerElement, html } from 'https://connect.filethis.com/ft-connect-wizard/3.0.0/node_modules/@polymer/polymer/polymer-element.js';\n" +
+      "        import { PolymerElement, html } from 'https://connect.filethis.com/ft-connect-wizard/{{RELEASE_VERSION}}/node_modules/@polymer/polymer/polymer-element.js';\n" +
       "\n" +
       "        // Wrap wizard with parent element that lets us customize it\n" +
       "        class CustomizedWizard extends PolymerElement {\n" +
