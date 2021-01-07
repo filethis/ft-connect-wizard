@@ -28,7 +28,7 @@
     "polymer.json"
   ],
   "dependencies": {
-    "npm-force-resolutions": "0.0.3",
+    "@webcomponents/webcomponentsjs": "^2.0.0",
     "@filethis/array-filter": "^2.0.1",
     "@filethis/ft-confirmation-dialog": "^3.0.0",
     "@filethis/ft-connect-behavior": "^3.0.0",
@@ -63,15 +63,6 @@
     "@polymer/paper-tooltip": "^3.0.0",
     "@polymer/polymer": "^3.0.0",
     "log4javascript": "^1.4.9"
-  },
-  "devDependencies": {
-    "@babel/helpers": "^7.12.5",
-    "@polymer/iron-component-page": "^4.0.0",
-    "@polymer/iron-demo-helpers": "^3.1.0",
-    "@polymer/iron-test-helpers": "^3.0.0",
-    "@webcomponents/webcomponentsjs": "^2.0.0",
-    "growl": "^1.10.5",
-    "wct-browser-legacy": "^1.0.2"
   },
   "directories": {
     "test": "test"
